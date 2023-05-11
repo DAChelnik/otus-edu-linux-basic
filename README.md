@@ -5,7 +5,7 @@ My name is Denis. I am Denis Chelnik.
 I am currently studying a course "Administrator Linux.Basic" in OTUS online school.  
 
 Здравствуйте, меня зовут [Денис](https://github.com/DAChelnik).  
-Изучаю курс [Administrator Linux.Basic](https://otus.ru/lessons/linux-basic/)) в школе [OTUS](https://otus.ru/ "OTUS онлайн-образование").  
+Изучаю курс [Administrator Linux.Basic](https://otus.ru/lessons/linux-basic/) в школе [OTUS](https://otus.ru/ "OTUS онлайн-образование").  
 Получаю навыки администрирования Linux, которые выделят меня среди начинающих администраторов ..
 
 
