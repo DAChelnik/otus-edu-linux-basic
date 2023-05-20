@@ -1,8 +1,7 @@
 #!/bin/bash/
 
-# переменные правильных NS
-NS1_CORRECT="172.31.96.1"
-NS2_CORRECT="10.23.1.1"
+DNS_PRIMARY="172.31.96.1"
+DNS_SECONDARY="10.23.1.1"
 
 if [[ ! -e /etc/resolv.conf ]]; then # проверяем, существует ли файл
 	echo "Файл /etc/resolv.conf отсутствует"
@@ -21,12 +20,27 @@ fi
 #	затем выводим второй столбец в тексте ( awk '{print $2}' )
 #	и полученное значение присваиваем переменной ns
 ns=$(cat /etc/resolv.conf  | grep -v '^#' | grep nameserver | awk '{print $2}')
-ns_correct="$NS1_CORRECT $NS2_CORRECT"
-echo $ns;
-echo $ns_correct;
+ns_correct="$DNS_PRIMARY $DNS_SECONDARY"
+#	Преобразуем переменные в массив
+ns_array=( $ns )
+ns_correct_array=( $ns_correct )
+#	Получим количество DNS-серверов в файле /etc/resolv.conf
+#	Если меньше или больше двух — ошибка.
+#	Подпсчитаем кол-во элементов в массиве
+if [[ ${#ns_array[@]} != 2 ]] ; then
+	echo "Количество DNS-серверов в файле /etc/resolv.conf не равно двум"
+	exit 1
+fi
 
-if [[ $ns != $ns_correct ]] ; then
-	echo "Конфигурация не совпадает"
+if [[ ${ns_array[@]} != ${ns_correct_array[@]} ]] ; then
+	echo -e "\nКонфигурация не совпадает!\n"
+	echo -e "\e[31mтекущая:"
+	echo "nameserver" ${ns_array[0]};
+	echo -e "nameserver" ${ns_array[1]} "\e[0m\n";
+	echo -e "\e[33mдолжна быть:"
+	echo "nameserver" ${ns_correct_array[0]};
+	echo -e "nameserver" ${ns_correct_array[1]} "\e[0m";
+	echo 
 else
 	echo "Вносить изменения не требуется"
 fi
