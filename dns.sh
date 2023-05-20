@@ -1,7 +1,7 @@
 #!/bin/bash/
 
-DNS_PRIMARY="172.31.96.1"
-DNS_SECONDARY="10.23.1.1"
+DNS_PRIMARY="77.88.8.8"
+DNS_SECONDARY="77.88.8.1"
 
 if [[ ! -e /etc/resolv.conf ]]; then # проверяем, существует ли файл
 	echo "Файл /etc/resolv.conf отсутствует"
@@ -21,7 +21,7 @@ fi
 #	и полученное значение присваиваем переменной ns
 ns=$(cat /etc/resolv.conf  | grep -v '^#' | grep nameserver | awk '{print $2}')
 ns_correct="$DNS_PRIMARY $DNS_SECONDARY"
-#	Преобразуем переменные в массив
+#	Преобразуем переменные в массив для дальнейшего сравнения
 ns_array=( $ns )
 ns_correct_array=( $ns_correct )
 #	Получим количество DNS-серверов в файле /etc/resolv.conf
@@ -32,15 +32,29 @@ if [[ ${#ns_array[@]} != 2 ]] ; then
 	exit 1
 fi
 
+var=1;
 if [[ ${ns_array[@]} != ${ns_correct_array[@]} ]] ; then
-	echo -e "\nКонфигурация не совпадает!\n"
-	echo -e "\e[31mтекущая:"
-	echo "nameserver" ${ns_array[0]};
-	echo -e "nameserver" ${ns_array[1]} "\e[0m\n";
-	echo -e "\e[33mдолжна быть:"
-	echo "nameserver" ${ns_correct_array[0]};
+	echo "Конфигурация не совпадает!"
+	echo
+	echo "текущая:"
+	echo -e "\e[31mnameserver" ${ns_array[0]};
+	echo -e "nameserver" ${ns_array[1]} "\e[0m";
+	echo
+	echo "должна быть:"
+	echo -e "\e[33mnameserver" ${ns_correct_array[0]};
 	echo -e "nameserver" ${ns_correct_array[1]} "\e[0m";
-	echo 
+	echo
+	echo "Перед редактироанием сделаем backup файла /etc/resolv.conf"
+	cp /etc/resolv.conf{,.baсkup}
+	echo
+	for i in $ns; do ptr=$(host $i | sed 's/Name: //' | sed 's/ .*//g' | head -n 1)
+		if [[ $var == 1 ]]; then
+			sed -i "s/$i/$DNS_PRIMARY/" /etc/resolv.conf
+		elif [[ $var == 2 ]]; then
+			sed -i "s/$i/$DNS_SECONDARY/" /etc/resolv.conf
+		fi
+		let "var++";
+	done
 else
 	echo "Вносить изменения не требуется"
 fi
