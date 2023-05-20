@@ -1,5 +1,8 @@
 #!/bin/bash/
 
+# переменные правильных NS
+NS1_CORRECT="172.31.96.1"
+NS2_CORRECT="10.23.1.1"
 
 if [[ ! -e /etc/resolv.conf ]]; then # проверяем, существует ли файл
 	echo "Файл /etc/resolv.conf отсутствует"
@@ -18,4 +21,12 @@ fi
 #	затем выводим второй столбец в тексте ( awk '{print $2}' )
 #	и полученное значение присваиваем переменной ns
 ns=$(cat /etc/resolv.conf  | grep -v '^#' | grep nameserver | awk '{print $2}')
+ns_correct="$NS1_CORRECT $NS2_CORRECT"
+echo $ns;
+echo $ns_correct;
 
+if [[ $ns != $ns_correct ]] ; then
+	echo "Конфигурация не совпадает"
+else
+	echo "Вносить изменения не требуется"
+fi
