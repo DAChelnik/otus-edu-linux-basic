@@ -47,7 +47,7 @@ if [[ ${ns_array[@]} != ${ns_correct_array[@]} ]] ; then
 	echo "Перед редактироанием сделаем backup файла /etc/resolv.conf"
 	cp /etc/resolv.conf{,.baсkup}
 	echo
-	for i in $ns; do ptr=$(host $i | sed 's/Name: //' | sed 's/ .*//g' | head -n 1)
+	for i in $ns; do
 		if [[ $var == 1 ]]; then
 			sed -i "s/$i/$DNS_PRIMARY/" /etc/resolv.conf
 		elif [[ $var == 2 ]]; then
