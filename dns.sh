@@ -2,11 +2,14 @@
 
 DNS_PRIMARY="77.88.8.8"
 DNS_SECONDARY="77.88.8.1"
+var=1;
 
-if [[ ! -e /etc/resolv.conf ]]; then # проверяем, существует ли файл
-	echo "Файл /etc/resolv.conf отсутствует"
+if [[ ! -e /etc/resolv.conf ]]
+then # проверяем, существует ли файл
+    echo "Файл /etc/resolv.conf отсутствует"
 	exit 1
-elif [ ! -w /etc/resolv.conf ] ; then # проверяем, есть ли права у пользователя на редактирование
+elif [[ ! -w /etc/resolv.conf ]]
+then # проверяем, есть ли права у пользователя на редактирование
 	echo "Нет прав на запись файла /etc/resolv.conf"
 	echo "Запустите скрипт от имени суперпользователя с помощью sudo"
 	exit 1
@@ -27,33 +30,37 @@ ns_correct_array=( $ns_correct )
 #	Получим количество DNS-серверов в файле /etc/resolv.conf
 #	Если меньше или больше двух — ошибка.
 #	Подпсчитаем кол-во элементов в массиве
-if [[ ${#ns_array[@]} != 2 ]] ; then
+if [[ ${#ns_array[@]} != 2 ]]
+then
 	echo "Количество DNS-серверов в файле /etc/resolv.conf не равно двум"
 	exit 1
 fi
 
-var=1;
-if [[ ${ns_array[@]} != ${ns_correct_array[@]} ]] ; then
+if [[ ${ns_array[@]} != ${ns_correct_array[@]} ]]
+then
 	echo "Конфигурация не совпадает!"
 	echo
 	echo "текущая:"
-	echo -e "\e[31mnameserver" ${ns_array[0]};
-	echo -e "nameserver" ${ns_array[1]} "\e[0m";
+	echo -e "\e[31mnameserver" ${ns_array[0]}
+	echo -e "nameserver" ${ns_array[1]} "\e[0m"
 	echo
 	echo "должна быть:"
-	echo -e "\e[33mnameserver" ${ns_correct_array[0]};
+	echo -e "\e[33mnameserver" ${ns_correct_array[0]}
 	echo -e "nameserver" ${ns_correct_array[1]} "\e[0m";
 	echo
 	echo "Перед редактироанием сделаем backup файла /etc/resolv.conf"
 	cp /etc/resolv.conf{,.baсkup}
 	echo
-	for i in $ns; do
-		if [[ $var == 1 ]]; then
+	for i in $ns
+	do
+		if [[ $var == 1 ]]
+		then
 			sed -i "s/$i/$DNS_PRIMARY/" /etc/resolv.conf
-		elif [[ $var == 2 ]]; then
+		elif [[ $var == 2 ]]
+		then
 			sed -i "s/$i/$DNS_SECONDARY/" /etc/resolv.conf
 		fi
-		let "var++";
+		let "var++"
 	done
 else
 	echo "Вносить изменения не требуется"
