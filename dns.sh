@@ -13,30 +13,6 @@ then
 	exit 1
 fi
 
-#	Осуществляем ввод предпочитаемого и альтернативного DNS-серверов
-#	Осуществляем проверку корректности ввода IP-адреса
-echo
-echo "Введите предпочитаемый DNS-сервер"
-read DNS_PRIMARY
-if [[ $DNS_PRIMARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
-then
-	echo
-	echo "Введите альтернативный DNS-сервер"
-	read DNS_SECONDARY
-	if [[ $DNS_PRIMARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
-	then
-		echo "Всё верно"
-	else
-	  echo "Это не IP-адрес"
-	  echo "Попробуйте заново"
-	  exit 1
-	fi
-else
-	echo "Это не IP-адрес"
-	echo "Попробуйте заново"
-	exit 1
-fi
-
 #	Далее команда grep в файле /etc/resolv.conf
 #	сначала исключаем строки начинающиеся с # ( grep -v '^#' )
 #		символ ^ (каретка) соответствует пустой строке в начале строки
@@ -45,44 +21,81 @@ fi
 #	затем выводим второй столбец в тексте ( awk '{print $2}' )
 #	и полученное значение присваиваем переменной ns
 ns=$(cat /etc/resolv.conf  | grep -v '^#' | grep nameserver | awk '{print $2}')
-ns_correct="$DNS_PRIMARY $DNS_SECONDARY"
 #	Преобразуем переменные в массив для дальнейшего сравнения
 ns_array=( $ns )
-ns_correct_array=( $ns_correct )
 #	Получим количество DNS-серверов в файле /etc/resolv.conf
 #	Если меньше или больше двух — ошибка.
-#	Подпсчитаем кол-во элементов в массиве
+#	Посчитаем кол-во элементов в массиве
 if [[ ${#ns_array[@]} != 2 ]]
 then
 	echo "Количество DNS-серверов в файле /etc/resolv.conf не равно двум"
 	exit 1
 fi
 
+#	Осуществляем ввод предпочитаемого и альтернативного DNS-серверов
+#	Осуществляем проверку корректности ввода IP-адреса
+echo
+echo "Введите предпочитаемый DNS-сервер"
+read DNS_PRIMARY
+if [[ $DNS_PRIMARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
+then
+	if dig @$DNS_PRIMARY -t ns ya.ru +short | grep -qai 'yandex'
+	then 
+		echo "DNS-сервер" $DNS_PRIMARY "корректный"; 
+	else 
+		echo "DNS-сервер" $DNS_PRIMARY "некорректен"; 
+		exit 1
+	fi;
+	echo
+	echo "Введите альтернативный DNS-сервер"
+	read DNS_SECONDARY
+	if [[ $DNS_SECONDARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
+	then
+		if dig @$DNS_SECONDARY -t ns ya.ru +short | grep -qai 'yandex'
+		then 
+			echo "DNS-сервер" $DNS_SECONDARY "корректный"; 
+		else 
+			echo "DNS-сервер" $DNS_SECONDARY "некорректен"; 
+			exit 1
+		fi;
+	else
+		echo "Это не IP-адрес"
+		echo "Попробуйте заново"
+		exit 1
+	fi
+else
+	echo "Это не IP-адрес"
+	echo "Попробуйте заново"
+	exit 1
+fi
+
 var=1;
+#	Преобразуем переменные DNS-серверов в массив для дальнейшего сравнения
+ns_correct="$DNS_PRIMARY $DNS_SECONDARY"
+ns_correct_array=( $ns_correct )
 if [[ ${ns_array[@]} != ${ns_correct_array[@]} ]]
 then
-	echo "Конфигурация не совпадает!"
 	echo
+	echo "Конфигурация не совпадает!"
 	echo "текущая:"
 	echo -e "\e[31mnameserver" ${ns_array[0]}
 	echo -e "nameserver" ${ns_array[1]} "\e[0m"
-	echo
 	echo "должна быть:"
 	echo -e "\e[33mnameserver" ${ns_correct_array[0]}
 	echo -e "nameserver" ${ns_correct_array[1]} "\e[0m";
 	echo
 	echo "Перед редактироанием сделаем backup файла /etc/resolv.conf"
-	cp /etc/resolv.conf{,.baсkup}
+	if [[ ! -e /etc/resolv.conf.baсkup ]]
+	then
+		cp /etc/resolv.conf{,.baсkup}
+	else
+		echo "Файл /etc/resolv.conf.baсkup существует"
+		echo "Удаляем файл"
+		rm -f /etc/resolv.conf.baсkup
+	fi
 	echo
 	for i in $ns
 	do 
-		if dig @$i -t ns ya.ru | grep -qai 'yandex'
-		then 
-			echo $i OK; 
-		else 
-			echo $i failed; 
-		fi; 
-		
 		if [[ $var == 1 ]]
 		then
 			sed -i "s/$i/$DNS_PRIMARY/" /etc/resolv.conf
@@ -92,6 +105,7 @@ then
 		fi
 		let "var++"
 	done
+	echo "Операция выполнена успешно"
 else
 	echo "Вносить изменения не требуется"
 fi
