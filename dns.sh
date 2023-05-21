@@ -34,40 +34,58 @@ fi
 
 #	Осуществляем ввод предпочитаемого и альтернативного DNS-серверов
 #	Осуществляем проверку корректности ввода IP-адреса
+dns_primary_count=0
+dns_secondary_count=0
 echo
-echo "Введите предпочитаемый DNS-сервер"
+echo "Введите предпочитаемый DNS-сервер:"
 read DNS_PRIMARY
-if [[ $DNS_PRIMARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
-then
-	if dig @$DNS_PRIMARY -t ns ya.ru +short | grep -qai 'yandex'
-	then 
-		echo "DNS-сервер" $DNS_PRIMARY "корректный"; 
-	else 
-		echo "DNS-сервер" $DNS_PRIMARY "некорректен"; 
-		exit 1
-	fi;
-	echo
-	echo "Введите альтернативный DNS-сервер"
-	read DNS_SECONDARY
-	if [[ $DNS_SECONDARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
+
+while [ $dns_primary_count -lt 1 ] && [ $dns_secondary_count -lt 1 ]
+do
+	if [[ $DNS_PRIMARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
 	then
-		if dig @$DNS_SECONDARY -t ns ya.ru +short | grep -qai 'yandex'
+		if dig @$DNS_PRIMARY -t ns ya.ru +short | grep -qai 'yandex'
 		then 
-			echo "DNS-сервер" $DNS_SECONDARY "корректный"; 
+			let dns_primary_count=1
+			echo "Предпочитаемый DNS-сервер" $DNS_PRIMARY "корректен"; 
+			echo
+			echo "Введите альтернативный DNS-сервер:"
+			read DNS_SECONDARY
+			if [[ $DNS_SECONDARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
+			then
+				if dig @$DNS_SECONDARY -t ns ya.ru +short | grep -qai 'yandex'
+				then 
+					let dns_secondary_count=1
+					echo "Предпочитаемый DNS-сервер" $DNS_SECONDARY "корректен"; 
+				else 
+					echo "Альтернативный DNS-сервер" $DNS_SECONDARY "некорректен"; 
+					let dns_secondary_count=0
+					unset DNS_SECONDARY
+					echo "Введите альтернативный DNS-сервер:"
+					read DNS_SECONDARY
+				fi;
+			else
+				echo "Это не IP-адрес"
+				echo "Введите альтернативный DNS-сервер:"
+				let dns_secondary_count=0
+				unset DNS_SECONDARY
+				read DNS_SECONDARY
+			fi
 		else 
-			echo "DNS-сервер" $DNS_SECONDARY "некорректен"; 
-			exit 1
+			echo "Предпочитаемый DNS-сервер" $DNS_PRIMARY "некорректен"; 
+			echo "Введите предпочитаемый DNS-сервер:"
+			let dns_primary_count=0
+			unset DNS_PRIMARY
+			read DNS_PRIMARY
 		fi;
 	else
 		echo "Это не IP-адрес"
-		echo "Попробуйте заново"
-		exit 1
+		echo "Введите предпочитаемый DNS-сервер:"
+		let dns_primary_count=0
+		unset DNS_PRIMARY
+		read DNS_PRIMARY
 	fi
-else
-	echo "Это не IP-адрес"
-	echo "Попробуйте заново"
-	exit 1
-fi
+done
 
 var=1;
 #	Преобразуем переменные DNS-серверов в массив для дальнейшего сравнения
