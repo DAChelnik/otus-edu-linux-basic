@@ -1,17 +1,39 @@
 #!/bin/bash/
 
-DNS_PRIMARY="77.88.8.8"
-DNS_SECONDARY="77.88.8.1"
-var=1;
-
+#	Проверяем, существует ли файл /etc/resolv.conf
+#	Проверяем, есть ли права у пользователя на редактирование файла
 if [[ ! -e /etc/resolv.conf ]]
-then # проверяем, существует ли файл
+then
     echo "Файл /etc/resolv.conf отсутствует"
 	exit 1
 elif [[ ! -w /etc/resolv.conf ]]
-then # проверяем, есть ли права у пользователя на редактирование
+then
 	echo "Нет прав на запись файла /etc/resolv.conf"
 	echo "Запустите скрипт от имени суперпользователя с помощью sudo"
+	exit 1
+fi
+
+#	Осуществляем ввод предпочитаемого и альтернативного DNS-серверов
+#	Осуществляем проверку корректности ввода IP-адреса
+echo
+echo "Введите предпочитаемый DNS-сервер"
+read DNS_PRIMARY
+if [[ $DNS_PRIMARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
+then
+	echo
+	echo "Введите альтернативный DNS-сервер"
+	read DNS_SECONDARY
+	if [[ $DNS_PRIMARY =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
+	then
+		echo "Всё верно"
+	else
+	  echo "Это не IP-адрес"
+	  echo "Попробуйте заново"
+	  exit 1
+	fi
+else
+	echo "Это не IP-адрес"
+	echo "Попробуйте заново"
 	exit 1
 fi
 
@@ -36,6 +58,7 @@ then
 	exit 1
 fi
 
+var=1;
 if [[ ${ns_array[@]} != ${ns_correct_array[@]} ]]
 then
 	echo "Конфигурация не совпадает!"
@@ -52,7 +75,14 @@ then
 	cp /etc/resolv.conf{,.baсkup}
 	echo
 	for i in $ns
-	do
+	do 
+		if dig @$i -t ns ya.ru | grep -qai 'yandex'
+		then 
+			echo $i OK; 
+		else 
+			echo $i failed; 
+		fi; 
+		
 		if [[ $var == 1 ]]
 		then
 			sed -i "s/$i/$DNS_PRIMARY/" /etc/resolv.conf
