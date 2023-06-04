@@ -1,0 +1,85 @@
+---
+
+# ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ:
+GLOBAL:
+  api_version: "2"
+  
+  # Сервер, на который будет осуществлена устанвока окружения
+  #   Доступные, протестированные переменные:
+  #     Meropa
+  #     Asterope
+  DACheF_cloud_server: "Meropa"
+
+  # Домен который будем использовать для кластера
+  DACheF_domain_suffix: ".chelnik.local"
+  
+  # PHP:
+  #   Доступные, протестированные переменные:
+  #   5.4, 5.6, 7.1, 7.2, 7.3, 7.4, 8.0
+  php_version: 7.4      
+  
+  # MySQL:
+  #   Доступные, протестированные переменные:
+  #   mysql57, mysql8, mariadb103, mariadb104, mariadb105, mariadb106
+  mysql_version: mysql8  
+  
+  # VAGRANT PROVIDER:
+  #   Доступные, протестированные переменные:
+  #     Docker              - docker
+  #     Hyper-V             - hyperv
+  #     VirtualBox          - virtualbox
+  #     VMWare Fusion       - vmware_fusion
+  #     VMWare Workstation  - vmware_workstation        
+  vagrant_provider: virtualbox
+  
+  # ЕДИНЫЙ ОБРАЗ СИСИТЕМЫ ДЛЯ ВСЕХ ВИРТУАЛЬНЫХ МАШИН: 
+  #   Доступные, протестированные переменные:
+  #     ubuntu/focal64 (20220724.0.0)
+  #     ubuntu/focal64 (20220905.0.0)
+  #     ubuntu/xenial64 (20211001.0.0)
+  box: "ubuntu/focal64"
+  box_version: "20220905.0.0"
+  #
+  VirtualHost:
+    -
+      ServerAdmin: "tech.krd@iac.cdep.ru"
+      VirtualminAdmin: "sudrf"
+      VirtualminAdminPassword: "n61OfS04p"
+      ServerName: "sudrf.wiki"
+      ServerAlias: "www.sudrf.wiki"
+      VirtualminServerDesc: "FSO IAC for technical support of SAS Pravosudiye"
+      DocumentRoot: "/var/www/html"
+    -
+      ServerAdmin: "tech.krd@iac.cdep.ru"
+      VirtualminAdmin: "sudrf-edu"
+      VirtualminAdminPassword: "B19yCekeM"
+      ServerName: "edu.sudrf.wiki"
+      ServerAlias: "www.edu.sudrf.wiki"
+      VirtualminServerDesc: ""
+      DocumentRoot: "/var/www/edu.sudrf.wiki"
+    -
+      ServerAdmin: "tech.krd@iac.cdep.ru"
+      VirtualminAdmin: "sudrf-docu"
+      VirtualminAdminPassword: "i6XsYQJIk"
+      ServerName: "docu.sudrf.wiki"
+      ServerAlias: "www.docu.sudrf.wiki"
+      VirtualminServerDesc: ""
+      DocumentRoot: "/var/www/docu.sudrf.wiki"
+    -
+      ServerAdmin: "tech.krd@iac.cdep.ru"
+      VirtualminAdmin: "iac-krd"
+      VirtualminAdminPassword: "AlXM3mrkR"
+      ServerName: "iac-krd.sudrf.wiki"
+      ServerAlias: "www.iac-krd.sudrf.wiki"
+      VirtualminServerDesc: ""
+      DocumentRoot: "/var/www/iac-krd.sudrf.wiki"
+    -
+      ServerAdmin: "tech.krd@iac.cdep.ru"
+      VirtualminAdmin: "sudrf-temon"
+      VirtualminAdminPassword: "LwbdLQBeS"
+      ServerName: "temon.sudrf.wiki"
+      ServerAlias: "www.temon.sudrf.wiki"
+      VirtualminServerDesc: ""
+      DocumentRoot: "/var/www/temon.sudrf.wiki"
+  
+...
