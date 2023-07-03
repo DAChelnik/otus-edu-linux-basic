@@ -1,4 +1,4 @@
-Hello, everyone
+Конфигурирование web-сервера (apache, nginx, балансировка nginx)
 ===============
 
 My name is Denis. I am Denis Chelnik.  
@@ -9,34 +9,13 @@ I am currently studying a course "Administrator Linux.Basic" in OTUS online scho
 Получаю навыки администрирования Linux, которые выделят меня среди начинающих администраторов ..
 
 
-В процессе обучения
+Домашнее задание
 -------------------------------------------------------
 
--  Познакомлюсь с базовыми понятиями ОС Linux
--  Изучу команды для работы в Bash
--  Научусь настраивать WEB-сервера (apache, nginx) и MySQL-сервер
+Создать базовый скелет web-сервера с балансировкой нагрузки. FrontEnd — Nginx, BackEnd — Apache:
 
-Изучу базовые понятия анализа сетевого траффика и правил фильтрации.  
-Изучу системы мониторинга:
--  zabbix
--  icinga
--  cacti
--  grafana
--  prometheus
-
-Рассмотрю следующий стек технологий
--------------------------------------------------------
-
--  Linux
--  Zabbix
--  Prometheus
--  TCP/IP
--  Nginx
--  Apache
--  MySQL
--  Bash
--  Docker
--  Git
--  NoSQL
--  Grafana
--  ELK
+-  установить Nginx и Apache
+-  настроить работу Apache на порты отличные от порта 80
+-  настроить работу Nginx на порт 80
+-  настроить upstream в Nginx для BackEnd Apache
+-  настроить перенаправление обращения Nginx на upstream
