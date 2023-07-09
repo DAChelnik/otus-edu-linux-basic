@@ -31,5 +31,5 @@ Thumbs.db
 # каталоги проекта
 .vagrant/
 data-backup/mysql/mysql-dump/
-data-www/
+#data-www/
 data-tmp/
