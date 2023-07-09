@@ -1,0 +1,207 @@
+---
+
+# ОБЯЗАТЕЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ КАЖДОЙ ИЗ ВИРТУАЛЬНЫХ МАШИН:
+#   setup                 - доступные переменные: true, false
+#   name                  - name (имя виртуальной машины)
+#   box_check_update      - проверка репозитория на наличие обновлений
+#   keys_only: false      - можно подключаться по паролю
+#   insert_key: false     - отменить создание ssh-ключа
+#   ip_private            -
+#   ip_public             -
+#   ip_bridge             -
+#   apache_document_root  - 
+
+# ДИНАМИЧЕСКИЕ ПОРТЫ:
+#   Диапазон 49152—65535 содержит динамически выделяемые или частные порты, которые не регистрируются IANA.
+#   Эти порты используются временными (короткоживущими) соединениями «клиент — сервер» или в определенных частных случаях.
+#     port_guest                - 
+#     port_host                 - 50101 - 50999
+#     port_ssh                  - 51101 - 51999
+#     port_web_based_interface  - 52101 - 52999
+
+# ДОПОЛНИТЕЛЬНЫЕ ПЕРЕМЕННЫЕ:
+#   document_root         -
+#   memory                - объем оперативной памяти, по умолчанию, если не указано, выделяется 1024Mb
+#   cpu                   - количество ядер процессора, по умолчанию, если не указано, выделяется одно
+#   mysql_dbname          - основная база данных сервера разработки приложений
+#   
+#   по умолчанию устанавливается образ системы, определённый в глобальных переменных
+#   если необходима специфичность, определите для виртуальной машины следующие переменные:
+#     box                   - образ системы
+#     box_version           -
+
+
+
+nodes:
+  -
+    # 
+    description: "Nginx Load Balancer"
+    #   обязательные переменные:
+    name: "nlb"
+    setup: true
+    web_based_interface: "cockpit"
+    domain_prefix: "nlb.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 80
+    port_ssh: 51101
+    port_web_based_interface: 52101
+    ip_private: 10.255.0.101
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    memory: 8192
+    cpu: 2
+  -
+    # 
+    description: "Сервер мониторинга IT-инфраструктуры, аудита и авторизации"
+    #   обязательные переменные:
+    name: "ns"
+    setup: false
+    web_based_interface: "cockpit"
+    domain_prefix: "ns.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50102
+    port_ssh: 51102
+    port_web_based_interface: 52102
+    ip_private: 10.255.0.102
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    memory: 8192
+    cpu: 2
+  -
+    #
+    description: "MySQL master-сервер баз данных"
+    #   обязательные переменные:
+    name: "mysql-master"
+    setup: false
+    web_based_interface: "cockpit"    
+    domain_prefix: "mysql-master.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50103
+    port_ssh: 51103
+    port_web_based_interface: 52103
+    ip_private: 10.255.0.103
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    mysql_guest: 3306
+    mysql_host: 3306
+    mysql_dbhost: localhost
+    mysql_dbname: friends_iac 
+    mysql_dbuser: root
+    mysql_dbpasswd: FpTzLgIBC1Rtvi9f
+    mysql_data_dir: "data/mysql/"
+    mysql_database:
+      -
+        dbname: gitea
+        dbuser: gitea
+        dbpwd: mZdKJzdsUt1Lcq0R
+      - 
+        dbname: wiki
+        dbuser: docusudrfwiki
+        dbpwd: qIc05St9cgGetaYp
+      - 
+        dbname: analytics_krd
+        dbuser: krdfsoiac
+        dbpwd: X3xJU5JvVVRQaoS1
+      - 
+        dbname: education
+        dbuser: education
+        dbpwd: ZxTycD0ruFM6Xjag
+    memory: 4096
+  -
+    #
+    description: "MySQL slave-сервер баз данных"
+    #   обязательные переменные:
+    name: "mysql-slave"
+    setup: false
+    web_based_interface: "cockpit"    
+    domain_prefix: "mysql-slave.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50104
+    port_ssh: 51104
+    port_web_based_interface: 52104
+    ip_private: 10.255.0.104
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    mysql_guest: 3306
+    mysql_host: 3306
+    mysql_dbhost: localhost
+    mysql_dbname: friends_iac 
+    mysql_dbuser: root
+    mysql_dbpasswd: FpTzLgIBC1Rtvi9f
+    mysql_data_dir: "data/mysql/"
+    mysql_database:
+      -
+        dbname: gitea
+        dbuser: gitea
+        dbpwd: mZdKJzdsUt1Lcq0R
+      - 
+        dbname: wiki
+        dbuser: docusudrfwiki
+        dbpwd: qIc05St9cgGetaYp
+      - 
+        dbname: analytics_krd
+        dbuser: krdfsoiac
+        dbpwd: X3xJU5JvVVRQaoS1
+      - 
+        dbname: education
+        dbuser: education
+        dbpwd: ZxTycD0ruFM6Xjag
+    memory: 4096
+  -
+    #
+    description: "Production-окружение Веб сервер Nginx+Apache (master)"
+    #   обязательные переменные:
+    name: "production-master"
+    setup: true
+    web_based_interface: "cockpit"
+    domain_prefix: "production-master.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50105
+    port_ssh: 51105
+    port_web_based_interface: 52105
+    ip_private: 10.255.0.105
+    # document_root: "data-www/upstream/"
+    apache_document_root: "/var/www"
+    #   дополнительные переменные:
+    memory: 6144
+    cpu: 2
+    disksize: 100GB
+  -
+    #
+    description: "Production-окружение Веб сервер Nginx+Apache (slave)"
+    #   обязательные переменные:
+    name: "production-slave"
+    setup: true
+    web_based_interface: "cockpit"
+    domain_prefix: "production-slave.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50106
+    port_ssh: 51106
+    port_web_based_interface: 52106
+    ip_private: 10.255.0.106
+    # document_root: "data-www/upstream/"
+    apache_document_root: "/var/www"
+    #   дополнительные переменные:
+    memory: 6144
+    cpu: 2
+    disksize: 100GB
+
+...

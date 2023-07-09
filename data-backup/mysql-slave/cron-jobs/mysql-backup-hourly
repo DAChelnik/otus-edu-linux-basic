@@ -1,0 +1,29 @@
+#!/bin/bash
+
+destination="/backup/mysql-dump"
+userDB="root"
+passwordDB="FpTzLgIBC1Rtvi9f"
+date=`date +%Y-%m-%d`
+fulldate=`date +%Y-%m-%d-%H-%M-%S`
+ 
+find $destination -type d \( -name "*-1[^5]" -o -name "*-[023]?" \) -mtime +30 -exec rm -R {} \; 2>&1
+find $destination -type d -name "*-*" -mtime +180 -exec rm -R {} \; 2>&1
+test -d $destination/$date || mkdir $destination/$date 2>&1
+ 
+for dbname in `echo show databases | mysql -u$userDB -p$passwordDB | grep -v Database`; do
+    case $dbname in
+        information_schema)
+            continue ;;
+        mysql)
+            continue ;;
+        performance_schema)
+            continue ;;
+        test)
+            continue ;;
+        phpmyadmin)
+            continue ;;
+        sys)
+            continue ;;
+        *) /usr/bin/mysqldump -u$userDB -p$passwordDB $dbname | gzip > $destination/$date/$dbname-$fulldate.sql.gz ;;
+    esac
+done;
