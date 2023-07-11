@@ -2,8 +2,9 @@
 # Balance server
 
 upstream backend {
-	server 10.255.0.105 weight=2;
-	server 10.255.0.106;
+	server 10.255.0.105 weight=20;
+	server 10.255.0.106 weight=10;
+	server 10.255.0.107 backup;
 }
 
 server {

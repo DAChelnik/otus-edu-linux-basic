@@ -161,12 +161,12 @@ nodes:
     memory: 4096
   -
     #
-    description: "Production-окружение Веб сервер Nginx+Apache (master)"
+    description: "Production-окружение Веб сервер Nginx+Apache (primary)"
     #   обязательные переменные:
-    name: "production-master"
+    name: "production-primary"
     setup: true
     web_based_interface: "cockpit"
-    domain_prefix: "production-master.meropa"
+    domain_prefix: "production-primary.meropa"
     box_check_update: false
     keys_only: false
     insert_key: false
@@ -175,7 +175,7 @@ nodes:
     port_ssh: 51105
     port_web_based_interface: 52105
     ip_private: 10.255.0.105
-    # document_root: "data-www/upstream/"
+    document_root: "data-www/upstream/"
     apache_document_root: "/var/www"
     #   дополнительные переменные:
     memory: 6144
@@ -183,12 +183,12 @@ nodes:
     disksize: 100GB
   -
     #
-    description: "Production-окружение Веб сервер Nginx+Apache (slave)"
+    description: "Production-окружение Веб сервер Nginx+Apache (secondary)"
     #   обязательные переменные:
-    name: "production-slave"
+    name: "production-secondary"
     setup: true
     web_based_interface: "cockpit"
-    domain_prefix: "production-slave.meropa"
+    domain_prefix: "production-secondary.meropa"
     box_check_update: false
     keys_only: false
     insert_key: false
@@ -197,7 +197,71 @@ nodes:
     port_ssh: 51106
     port_web_based_interface: 52106
     ip_private: 10.255.0.106
-    # document_root: "data-www/upstream/"
+    document_root: "data-www/upstream/"
+    apache_document_root: "/var/www"
+    #   дополнительные переменные:
+    memory: 6144
+    cpu: 2
+    disksize: 100GB
+  -
+    #
+    description: "Production-окружение Веб сервер Nginx+Apache (backup)"
+    #   обязательные переменные:
+    name: "production-backup"
+    setup: true
+    web_based_interface: "cockpit"
+    domain_prefix: "production-backup.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50107
+    port_ssh: 51107
+    port_web_based_interface: 52107
+    ip_private: 10.255.0.107
+    document_root: "data-www/upstream/"
+    apache_document_root: "/var/www"
+    #   дополнительные переменные:
+    memory: 6144
+    cpu: 2
+    disksize: 100GB
+  -
+    #
+    description: "Сервер непрерывной интеграции (билд-сервер)"
+    #   обязательные переменные:
+    name: "build"
+    setup: true
+    web_based_interface: "cockpit"
+    domain_prefix: "build.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50108
+    port_ssh: 51108
+    port_web_based_interface: 52108
+    ip_private: 10.255.0.108
+    apache_document_root: "/var/www"
+    #   дополнительные переменные:
+    memory: 6144
+    cpu: 2
+    disksize: 100GB
+  -
+    #
+    description: "Сервер разработки приложений"
+    #   обязательные переменные:
+    name: "dev"
+    setup: true
+    web_based_interface: "cockpit"
+    domain_prefix: "dev.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50109
+    port_ssh: 51109
+    port_web_based_interface: 52109
+    ip_private: 10.255.0.109
     apache_document_root: "/var/www"
     #   дополнительные переменные:
     memory: 6144

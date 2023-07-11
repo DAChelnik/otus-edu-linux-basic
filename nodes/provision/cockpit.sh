@@ -14,18 +14,23 @@ echo -e "\e[33m - добавляем службу в автозагрузку \e
 sudo systemctl enable --now cockpit.socket
 echo -e "\e[33m - запускаем службу \e[0m"
 sudo systemctl start cockpit > /dev/null
+
 echo -e ""
 echo -e "\e[33m Устанавливаем модули: \e[0m"
-echo -e "\e[33m - cockpit-dashboard \e[0m"
-echo -e "\e[33m   модуль управления множеством серверов из одной сессии  \e[0m"
-apt-get install -y cockpit-dashboard > /dev/null
+
 echo -e "\e[33m - cockpit-storaged \e[0m"
 echo -e "\e[33m   модуль управления системными хранилищами данных, включая \e[0m"
 echo -e "\e[33m   создание и форматирование разделов и управление LVM-томами  \e[0m"
 apt-get install -y cockpit-storaged > /dev/null
+
 echo -e "\e[33m - cockpit-packagekit \e[0m"
 echo -e "\e[33m   согласованный API для прикладного программного обеспечения \e[0m"
 apt-get install -y cockpit-packagekit > /dev/null
+
+echo -e "\e[33m - cockpit-pcp \e[0m"
+echo -e "\e[33m   визуализация данных производительности \e[0m"
+apt-get install -y cockpit-pcp > /dev/null
+
 echo -e ""
 echo -e "\e[33m Перезапускаем службу Cockpit \e[0m"
 sudo systemctl restart cockpit.socket

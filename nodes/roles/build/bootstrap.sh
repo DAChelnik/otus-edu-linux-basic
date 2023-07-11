@@ -7,7 +7,7 @@ export DEBIAN_FRONTEND=noninteractive
 #   Когда вы пытаетесь установить пакет с помощью команды apt-get install , он всегда запрашивает подтверждение, 
 #   флаг -y указывает «да», поэтому он не будет запрашивать подтверждение каждой установки.
 echo -e "\n"
-echo -e "\e[33m Production-окружение \e[0m \n"
+echo -e "\e[33m Сервер непрерывной интеграции (билд-сервер) \e[0m \n"
 echo -e "\e[33m Инициализация веб-сервера Nginx+Apache  \e[0m \n"
 echo -e "\e[33m Устанавливаем базовые пакеты и утилиты: \e[0m"
 
@@ -26,7 +26,6 @@ echo -e "\e[33m - PHP версии $PHPVERSION \e[0m"
 apt-get -y install php$PHPVERSION libapache2-mod-php$PHPVERSION > /dev/null
 
 echo -e "\e[33m - необходимые PHP расширения \e[0m"
-apt-get -y install php$PHPVERSION-json > /dev/null
 apt-get -y install php$PHPVERSION-curl > /dev/null
 apt-get -y install php$PHPVERSION-mysql > /dev/null
 apt-get -y install php$PHPVERSION-xml > /dev/null
