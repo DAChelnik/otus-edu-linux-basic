@@ -4,6 +4,8 @@ services:
   apache:
     image: httpd:2.4
     container_name: otus-lesson-12-hw-apache
+    ports:
+      - 8080:8080
     volumes:
       - ./src:/var/www/html
       - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
@@ -19,6 +21,7 @@ services:
       - ./src:/var/www/html
       - ./nginx/default:/etc/nginx/sites-available/default:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - apache
 
