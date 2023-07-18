@@ -7,7 +7,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./src:/var/www/html
+      - ./src:/usr/local/apache2/htdocs
       - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php
@@ -30,6 +30,6 @@ services:
     build:
       ./php
     volumes:
-      - ./src:/var/www/html
+      - ./src:/usr/local/apache2/htdocs
       - ./php/php.ini:/usr/local/etc/php/php.ini
    
