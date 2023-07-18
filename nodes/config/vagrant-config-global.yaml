@@ -35,10 +35,6 @@ GLOBAL:
   vagrant_provider: virtualbox
   
   # ЕДИНЫЙ ОБРАЗ СИСТЕМЫ ДЛЯ ВСЕХ ВИРТУАЛЬНЫХ МАШИН: 
-  #   Доступные, протестированные переменные:
-  #     ubuntu/focal64 (20220724.0.0)
-  #     ubuntu/focal64 (20220905.0.0)
-  #     ubuntu/xenial64 (20211001.0.0)
   box: "bento/ubuntu-22.04"
   box_version: "202303.13.0"
   #

@@ -103,33 +103,12 @@ Vagrant.configure("#{configglobal["GLOBAL"]["api_version"]}") do |config|
         #     vm.vm.network "forwarded_port", guest: 35555, host: 12003, protocol: "udp" 
         vm.vm.network "forwarded_port", guest: confignodes["port_guest"], host: confignodes["port_host"], auto_correct: true
         #
-        #   WEBMIN — веб-портал для управления системой Linux
-        #     С его помощью можно выполнять повседневные обязанности системного администрирования без необходимости вводить команды в строке unix shell.
-        #   VIRTUALMIN — это мощная и гибкая панель управления веб-хостингом для систем Linux и BSD. 
-        #     С Virtualmin вы сможете управлять Apache, Nginx, PHP, DNS, MySQL, PostgreSQL, почтовыми ящиками, 
-        #     FTP, SSH, SSL, репозиториями Subversion / Git и многими другими.
-        #     По умолчанию, Webmin и Virtualmin работаюи на порту 10000
         #   COCKPIT — инструмент для мониторинга и администрирования виртуальных серверов Linux через веб-браузер 
         #     Он представляет собой интерактивный веб-интерфейс, реализованный через LIVE-сеанс Linux в веб-браузере. 
         #     И позволяет осуществлять функции мониторинга и администрирования.
         #     По умолчанию, Cockpit работает на порту 9090
-        #   FASTPANEL — простая и функциональная панель управления сервером
-        #     Создавайте сайты в несколько кликов, управляйте файлами, почтой, базами данных, резервными копиями, планируйте задачи и анализируйте трафик.
-        #     Установите и настройте права доступа так, как Вам удобно – каждый сайт можно закрепить за отдельным пользователем. Чтобы повысить 
-        #     безопасность Вашего аккаунта подключите двухфакторную аутентификацию.
-        #     Динамические уведомления позволяют быть в курсе состояния сервера и сайтов. Кроме того, FASTPANEL включает в себя Web SSH-клиент и предпросмотр сайтов.
-        #     По умолчанию, FASTPANEL работает на порту 8888
-        if confignodes["port_web_based_interface"] && confignodes["web_based_interface"] == "webmin"
-          vm.vm.network "forwarded_port", guest: 10000, host: confignodes["port_web_based_interface"], 
-          auto_correct: true
-        elsif confignodes["port_web_based_interface"] && confignodes["web_based_interface"] == "virtualmin"
-          vm.vm.network "forwarded_port", guest: 10000, host: confignodes["port_web_based_interface"], 
-          auto_correct: true
-        elsif confignodes["port_web_based_interface"] && confignodes["web_based_interface"] == "cockpit"
+        if confignodes["port_web_based_interface"] && confignodes["web_based_interface"] == "cockpit"
           vm.vm.network "forwarded_port", guest: 9090, host: confignodes["port_web_based_interface"], 
-          auto_correct: true
-        elsif confignodes["port_web_based_interface"] && confignodes["web_based_interface"] == "fastpanel"
-          vm.vm.network "forwarded_port", guest: 8888, host: confignodes["port_web_based_interface"], 
           auto_correct: true
         end
         #
@@ -188,7 +167,7 @@ Vagrant.configure("#{configglobal["GLOBAL"]["api_version"]}") do |config|
         # vm.vm.synced_folder ".", "/vagrant", disabled: true
         vm.vm.synced_folder "./www", "/var/www/html", disabled: true
         if confignodes["document_root"]
-          vm.vm.synced_folder confignodes["document_root"], confignodes["apache_document_root"],
+          vm.vm.synced_folder "data-www/#{confignodes["document_root"]}/", confignodes["apache_document_root"],
             create: true, 
             owner: "www-data", 
             group: "www-data"
@@ -214,32 +193,30 @@ Vagrant.configure("#{configglobal["GLOBAL"]["api_version"]}") do |config|
             run: "always", 
             privileged: true
         end
-        #   если панель управления Webmin:
-        if confignodes["web_based_interface"] == "webmin" && File.file?("#{current_dir}/nodes/provision/webmin.sh")
-          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/webmin.sh"
-        #   если панель управления Virtualmin:
-        elsif confignodes["web_based_interface"] == "virtualmin" && File.file?("#{current_dir}/nodes/provision/webmin.sh") && File.file?("#{current_dir}/nodes/provision/virtualmin.sh")
-          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/webmin.sh"
-          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualmin.sh"
-        #   если панель управления Cockpit:
-        elsif File.file?("#{current_dir}/nodes/provision/cockpit.sh") && confignodes["web_based_interface"] == "cockpit"
+        if File.file?("#{current_dir}/nodes/provision/cockpit.sh") && confignodes["web_based_interface"] == "cockpit"
           vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/cockpit.sh",
-            env: {
-            }
-        #   если панель управления FASTPANEL:
-        elsif File.file?("#{current_dir}/nodes/provision/fastpanel.sh") && confignodes["web_based_interface"] == "fastpanel"
-          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/fastpanel.sh",
             env: {
             }
         end 
         if File.file?("#{current_dir}/nodes/roles/#{confignodes["name"]}/bootstrap.sh")
+          if confignodes["php_version"]
+            php_version = confignodes["php_version"];
+          else
+            php_version = configglobal["GLOBAL"]["php_version"];
+          end
+          if confignodes["mysql_version"]
+            mysql_version = confignodes["mysql_version"];
+          else
+            mysql_version = configglobal["GLOBAL"]["mysql_version"];
+          end
           vm.vm.provision "shell", path: "#{current_dir}/nodes/roles/#{confignodes["name"]}/bootstrap.sh",
             env: {
-              "PHPVERSION"  => "#{configglobal["GLOBAL"]["php_version"]}",
-              "DBHOST"      => "#{confignodes["mysql_dbhost"]}", 
-              "DB_ROOT_NAME"      => "#{confignodes["mysql_dbname"]}", 
-              "DB_ROOT_USER"      => "#{confignodes["mysql_dbuser"]}", 
-              "DB_ROOT_PASSWD"    => "#{confignodes["mysql_dbpasswd"]}"
+              "PHPVERSION"      => php_version,
+              "MYSQLVERSION"    => mysql_version, 
+              "DBHOST"          => "#{confignodes["mysql_dbhost"]}",
+              "DB_ROOT_NAME"    => "#{confignodes["mysql_dbname"]}", 
+              "DB_ROOT_USER"    => "#{confignodes["mysql_dbuser"]}", 
+              "DB_ROOT_PASSWD"  => "#{confignodes["mysql_dbpasswd"]}"
             }
         end
         
@@ -313,59 +290,72 @@ Vagrant.configure("#{configglobal["GLOBAL"]["api_version"]}") do |config|
                 }
             end
           end
-        elsif confignodes["name"] == "production-master"
+        elsif confignodes["name"] == "production-primary"
           #   ДОПОЛНИТЕЛЬНАЯ КОНФИГУРАЦИЯ ВИРТУАЛЬНОЙ МАШИНЫ С ПОМОЩЬЮ SHELL
-          if confignodes["web_based_interface"] == "virtualmin"
-            configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
-              vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create-virtualmin.sh",
-                env: {
-                  "ServerName"                => "#{virtualhost["ServerName"]}",
-                  "VirtualminAdminPassword"   => "#{virtualhost["VirtualminAdminPassword"]}",
-                  "VirtualminServerDesc"      => "#{virtualhost["description"]}",
-                  "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
-                }
-            end
-          else
-            configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
-              vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create.sh",
-                env: {
-                  "ServerAdmin"   => "#{virtualhost["ServerAdmin"]}",
-                  "ServerName"    => "#{virtualhost["ServerName"]}",
-                  "ServerAlias"   => "#{virtualhost["ServerAlias"]}",
-                  "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
-                }
-            end
-            vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-register.sh"
-          end       
-        elsif confignodes["name"] == "production-slave"
+          configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
+            vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create.sh",
+              env: {
+                "ServerAdmin"   => "#{virtualhost["ServerAdmin"]}",
+                "ServerName"    => "#{virtualhost["ServerName"]}",
+                "ServerAlias"   => "#{virtualhost["ServerAlias"]}",
+                "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
+              }
+          end
+          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-register.sh"
+        elsif confignodes["name"] == "production-secondary"
           #   ДОПОЛНИТЕЛЬНАЯ КОНФИГУРАЦИЯ ВИРТУАЛЬНОЙ МАШИНЫ С ПОМОЩЬЮ SHELL
-          if confignodes["web_based_interface"] == "virtualmin"
-            configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
-              vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create-virtualmin.sh",
-                env: {
-                  "ServerName"                => "#{virtualhost["ServerName"]}",
-                  "VirtualminAdminPassword"   => "#{virtualhost["VirtualminAdminPassword"]}",
-                  "VirtualminServerDesc"      => "#{virtualhost["description"]}",
-                  "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
-                }
-            end
-          else
-            configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
-              vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create.sh",
-                env: {
-                  "ServerAdmin"   => "#{virtualhost["ServerAdmin"]}",
-                  "ServerName"    => "#{virtualhost["ServerName"]}",
-                  "ServerAlias"   => "#{virtualhost["ServerAlias"]}",
-                  "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
-                }
-            end
-            vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-register.sh"
-          end       
+          configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
+            vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create.sh",
+              env: {
+                "ServerAdmin"   => "#{virtualhost["ServerAdmin"]}",
+                "ServerName"    => "#{virtualhost["ServerName"]}",
+                "ServerAlias"   => "#{virtualhost["ServerAlias"]}",
+                "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
+              }
+          end
+          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-register.sh"
+        elsif confignodes["name"] == "production-backup"
+          #   ДОПОЛНИТЕЛЬНАЯ КОНФИГУРАЦИЯ ВИРТУАЛЬНОЙ МАШИНЫ С ПОМОЩЬЮ SHELL
+          configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
+            vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create.sh",
+              env: {
+                "ServerAdmin"   => "#{virtualhost["ServerAdmin"]}",
+                "ServerName"    => "#{virtualhost["ServerName"]}",
+                "ServerAlias"   => "#{virtualhost["ServerAlias"]}",
+                "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
+              }
+          end
+          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-register.sh"
+        elsif confignodes["name"] == "build"
+          #   ДОПОЛНИТЕЛЬНАЯ КОНФИГУРАЦИЯ ВИРТУАЛЬНОЙ МАШИНЫ С ПОМОЩЬЮ SHELL
+          configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
+            vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create.sh",
+              env: {
+                "ServerAdmin"   => "#{virtualhost["ServerAdmin"]}",
+                "ServerName"    => "#{virtualhost["ServerName"]}",
+                "ServerAlias"   => "#{virtualhost["ServerAlias"]}",
+                "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
+              }
+          end
+          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-register.sh"
+        elsif confignodes["name"] == "dev"
+          #   ДОПОЛНИТЕЛЬНАЯ КОНФИГУРАЦИЯ ВИРТУАЛЬНОЙ МАШИНЫ С ПОМОЩЬЮ SHELL
+          configglobal["GLOBAL"]["VirtualHost"].each do |virtualhost|
+            vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-create.sh",
+              env: {
+                "ServerAdmin"   => "#{virtualhost["ServerAdmin"]}",
+                "ServerName"    => "#{virtualhost["ServerName"]}",
+                "ServerAlias"   => "#{virtualhost["ServerAlias"]}",
+                "DocumentRoot"  => "#{virtualhost["DocumentRoot"]}",
+              }
+          end
+          vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-register.sh"
+        elsif confignodes["name"] == "test"
+          #   ДОПОЛНИТЕЛЬНАЯ КОНФИГУРАЦИЯ ВИРТУАЛЬНОЙ МАШИНЫ С ПОМОЩЬЮ SHELL
         end                     
       end
     end
   end
-  
   # КОНФИГУРАЦИЯ ВИРТУАЛЬНОЙ МАШИНЫ С ПОМОЩЬЮ SHELL:
   #   для каждой из вирутальных машин при первой инициализации
   config.vm.provision "shell", path: "#{current_dir}/nodes/provision/provision.sh",

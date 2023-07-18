@@ -6,6 +6,6 @@ export DEBIAN_FRONTEND=noninteractive
 #   Если вы хотите увидеть результат при подготовке, просто удалите его.
 #   Когда вы пытаетесь установить пакет с помощью команды apt-get install , он всегда запрашивает подтверждение, 
 #   флаг -y указывает «да», поэтому он не будет запрашивать подтверждение каждой установки.
+echo -e "\n"
+echo -e "\e[33m Экспериментальный сервер \e[0m \n"
 
-sudo virtualmin create-domain --domain $ServerName --pass $VirtualminAdminPassword --desc $VirtualminServerDesc  --user $VirtualminAdmin --unix --dir --webmin --web
-# sudo virtualmin enable-domain --domain $ServerName

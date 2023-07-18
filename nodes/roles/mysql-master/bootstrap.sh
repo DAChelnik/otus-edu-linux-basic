@@ -7,9 +7,10 @@ export DEBIAN_FRONTEND=noninteractive
 #   Когда вы пытаетесь установить пакет с помощью команды apt-get install , он всегда запрашивает подтверждение, 
 #   флаг -y указывает «да», поэтому он не будет запрашивать подтверждение каждой установки.
 echo -e "\n"
-echo -e "\e[33m Инициализация MySQL сервера баз данных \e[0m \n"
-echo -e "\e[33m Устанавливаем базовые пакеты: \e[0m"
+echo -e "\e[33m Инициализация MySQL сервера баз данных .. \e[0m \n"
 
+echo -e "\n"
+echo -e "\e[33m Устанавливаем базовые пакеты: \e[0m"
 echo -e "\e[33m - Apache сервер \e[0m"
 apt-get -y install apache2 > /dev/null
 
@@ -55,7 +56,7 @@ EOF
 sudo mysql -uroot -e "CREATE USER '$DB_ROOT_USER'@'%' IDENTIFIED BY '$DB_ROOT_PASSWD'"
 sudo mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO '$DB_ROOT_USER'@'%' WITH GRANT OPTION"
 sudo mysql -uroot -e "FLUSH PRIVILEGES;"
-sudo service mysqld restart
+# service mysql restart
 
 echo -e "\e[33m Создаём базу данных сервера разработки приложений $DB_ROOT_NAME \e[0m"
 sudo mysql -uroot -e "CREATE DATABASE IF NOT EXISTS $DB_ROOT_NAME"
@@ -66,13 +67,17 @@ echo -e "\e[33m Устанавливаем MySQL интерфейс phpMyAdmin \
 apt-get -y install phpmyadmin > /dev/null
 
 sudo sed -i "s/.*bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf
+echo -e "\e[33m Включаем Apache mod rewrite \e[0m"
 sudo a2enmod rewrite
 
 sudo sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf
 sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/$PHPVERSION/apache2/php.ini
 sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/$PHPVERSION/apache2/php.ini
 
+
+# Перезапускаем Apache (останавливаем, а затем запускаем службу)
 sudo service apache2 restart
+# Перезапускаем MySQL (останавливаем, а затем запускаем службу)
 sudo service mysql restart
 
 echo -e "\e[33m Брандмауэр UFW \e[0m"
@@ -80,10 +85,6 @@ echo -e "\e[33m - открываем необходимые порты для р
 sudo ufw allow 'Apache Full' > /dev/null
 echo -e "\e[33m - открываем порт 3306 для работы MySQL \e[0m"
 sudo ufw allow 3306/tcp > /dev/null
-
-echo -e "\e[33m Состояние и действующие на данный момент правила: \e[0m"
-sudo ufw status verbose
-echo -e "\n"
 
 echo -e "\e[33m Настраиваем права доступа к папке /backup \e[0m"
 sudo mkdir /backup/mysql-dump

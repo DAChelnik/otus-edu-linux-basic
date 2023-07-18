@@ -14,7 +14,7 @@ ECHO.
 call :colored "ОСНОВНОЕ МЕНЮ:" yellow
 ECHO.
 ECHO        0 - Статус виртуальных машин
-ECHO        1 - Обновить контейнеры Vagrant
+ECHO        1 - 
 ECHO        2 -
 ECHO.
 ECHO        3 - Запустить все виртуальные машины
@@ -37,7 +37,8 @@ ECHO        prod-primary	- Production-окружение Веб сервер Nginx+Apache (master)
 ECHO        prod-secondary	- Production-окружение Веб сервер Nginx+Apache (secondary)
 ECHO        prod-backup		- Production-окружение Веб сервер Nginx+Apache (backup)
 ECHO        build			- Сервер непрерывной интеграции (билд-сервер)
-ECHO       	dev				- Сервер разработки приложений
+ECHO		dev				- Сервер разработки приложений
+ECHO		test				- Экспериментальный сервер
 ECHO.
 ECHO.
 call :colored "Введите код желаемого пункта" yellow
@@ -73,7 +74,7 @@ if '%choice%'=='1024' goto 1024
 if '%choice%'=='1029' goto 1029
 
 
-if '%choice%'=='mysql-prod-master' goto mysql-prod-master
+if '%choice%'=='mysql-master' goto mysql-master
 if '%choice%'=='1030' goto 1030
 if '%choice%'=='1031' goto 1031
 if '%choice%'=='1032' goto 1032
@@ -82,7 +83,7 @@ if '%choice%'=='1034' goto 1034
 if '%choice%'=='1039' goto 1039
 
 
-if '%choice%'=='mysql-prod-slave' goto mysql-prod-slave
+if '%choice%'=='mysql-slave' goto mysql-slave
 if '%choice%'=='1040' goto 1040
 if '%choice%'=='1041' goto 1041
 if '%choice%'=='1042' goto 1042
@@ -132,6 +133,14 @@ if '%choice%'=='1093' goto 1093
 if '%choice%'=='1094' goto 1094
 if '%choice%'=='1099' goto 1099
 
+if '%choice%'=='test' goto test
+if '%choice%'=='1090' goto 1090
+if '%choice%'=='1091' goto 1091
+if '%choice%'=='1092' goto 1092
+if '%choice%'=='1093' goto 1093
+if '%choice%'=='1094' goto 1094
+if '%choice%'=='1099' goto 1099
+
 if not '%choice%'=='' (
 	cls
   ECHO.
@@ -174,19 +183,12 @@ if not '%choice%'=='' (
 
 
 :1
-  cls
-  cd VagrantBoxes
-  call :colored "Список установленных контейнеров, включая информацию о версиях:" yellow
-  ECHO.
-  vagrant box list
-  ECHO.
-  call :colored "Нажмите любую клавишу для продолжения .." yellow
-  pause >nul
-  cls
+	cls
+	goto start
 
 :2
 	cls
-  goto start
+	goto start
 
 :3
 	cls
@@ -762,9 +764,9 @@ if not '%choice%'=='' (
 	ECHO.
 	call :colored "Production-окружение Веб сервер Nginx+Apache (backup)" red
 	ECHO.
-	vagrant status production-secondary
+	vagrant status production-backup
 	ECHO.
-	vagrant port production-secondary
+	vagrant port production-backup
 	ECHO.
 	ECHO.
 	call :colored "МЕНЮ СЕРВЕРА:" yellow
@@ -844,9 +846,9 @@ if not '%choice%'=='' (
 	ECHO.
 	call :colored "Сервер непрерывной интеграции (билд-сервер)" red
 	ECHO.
-	vagrant status production-secondary
+	vagrant status build
 	ECHO.
-	vagrant port production-secondary
+	vagrant port build
 	ECHO.
 	ECHO.
 	call :colored "МЕНЮ СЕРВЕРА:" yellow
@@ -932,9 +934,9 @@ if not '%choice%'=='' (
 	ECHO.
 	call :colored "Сервер непрерывной интеграции (билд-сервер)" red
 	ECHO.
-	vagrant status production-secondary
+	vagrant status dev
 	ECHO.
-	vagrant port production-secondary
+	vagrant port dev
 	ECHO.
 	ECHO.
 	call :colored "МЕНЮ СЕРВЕРА:" yellow
@@ -1014,6 +1016,93 @@ if not '%choice%'=='' (
   start chrome "http://localhost:52109"
   cls
   goto dev
+  
+:test
+	cls	
+	ECHO.Экспериментальный сервер" red
+	ECHO.
+	vagrant status test
+	ECHO.
+	vagrant port test
+	ECHO.
+	ECHO.
+	call :colored "МЕНЮ СЕРВЕРА:" yellow
+	ECHO.
+	ECHO      1100  - запустить
+	ECHO      1101  - остановить
+	ECHO      1103  - отправить в сон
+	ECHO      1103  -  .. из сна
+	ECHO      1104  - удалить полностью
+	ECHO      1109  - панель управления
+	ECHO.
+	goto start
+
+:1100
+  cls
+  ECHO.
+  call :colored "Проверяем Vagrantfile на ошибки:" yellow
+  ECHO.
+  vagrant validate 
+  ECHO.
+  call :colored "Нажмите любую клавишу для продолжения .." yellow
+  pause >nul
+  cls
+  ECHO.
+  vagrant up test
+  ECHO.
+  ECHO.
+  call :colored "Нажмите любую клавишу для продолжения .." yellow
+  pause >nul
+  cls
+  goto test
+	
+:1101
+	cls
+	ECHO.
+	vagrant halt test
+	ECHO.
+	call :colored "Нажмите любую клавишу для продолжения .." yellow
+	pause >nul
+	cls
+  goto test
+	
+:1102
+	cls
+	ECHO.
+	vagrant suspend test
+	ECHO.
+	call :colored "Нажмите любую клавишу для продолжения .." yellow
+	pause >nul
+	cls
+  goto test
+	
+:1103
+	cls
+	ECHO.
+	vagrant resume test
+	ECHO.
+	call :colored "Нажмите любую клавишу для продолжения .." yellow
+	pause >nul
+	cls
+	goto test
+	
+:1104
+	cls
+	ECHO.
+	vagrant halt test
+	ECHO.
+	vagrant destroy -f test
+	ECHO.
+	rem  cd .. 
+	rmdir .vagrant\machines\test /s /q
+	cls
+	goto test
+
+:1109
+  cls
+  start chrome "http://localhost:52110"
+  cls
+  goto test
 
 	
 	

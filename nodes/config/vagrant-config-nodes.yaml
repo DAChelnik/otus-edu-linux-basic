@@ -78,9 +78,11 @@ nodes:
     description: "MySQL master-сервер баз данных"
     #   обязательные переменные:
     name: "mysql-master"
-    setup: false
+    setup: true
     web_based_interface: "cockpit"    
     domain_prefix: "mysql-master.meropa"
+    box: "ubuntu/focal64"
+    box_version: "20230506.0.0"
     box_check_update: false
     keys_only: false
     insert_key: false
@@ -90,6 +92,8 @@ nodes:
     port_web_based_interface: 52103
     ip_private: 10.255.0.103
     apache_document_root: "/var/www/html"
+    php_version: 7.4
+    mysql_version: mysql8
     #   дополнительные переменные:
     mysql_guest: 3306
     mysql_host: 3306
@@ -100,30 +104,28 @@ nodes:
     mysql_data_dir: "data/mysql/"
     mysql_database:
       -
-        dbname: gitea
-        dbuser: gitea
+        dbname: blog
+        dbuser: blog
         dbpwd: mZdKJzdsUt1Lcq0R
       - 
         dbname: wiki
         dbuser: docusudrfwiki
         dbpwd: qIc05St9cgGetaYp
       - 
-        dbname: analytics_krd
-        dbuser: krdfsoiac
+        dbname: chelnik
+        dbuser: chelnik
         dbpwd: X3xJU5JvVVRQaoS1
-      - 
-        dbname: education
-        dbuser: education
-        dbpwd: ZxTycD0ruFM6Xjag
     memory: 4096
   -
     #
     description: "MySQL slave-сервер баз данных"
     #   обязательные переменные:
     name: "mysql-slave"
-    setup: false
-    web_based_interface: "cockpit"    
+    setup: true
+    web_based_interface: false    
     domain_prefix: "mysql-slave.meropa"
+    box: "ubuntu/focal64"
+    box_version: "20230506.0.0"
     box_check_update: false
     keys_only: false
     insert_key: false
@@ -133,9 +135,11 @@ nodes:
     port_web_based_interface: 52104
     ip_private: 10.255.0.104
     apache_document_root: "/var/www/html"
+    php_version: 7.4
+    mysql_version: mysql8
     #   дополнительные переменные:
     mysql_guest: 3306
-    mysql_host: 3306
+    mysql_host: 53104
     mysql_dbhost: localhost
     mysql_dbname: friends_iac 
     mysql_dbuser: root
@@ -143,21 +147,13 @@ nodes:
     mysql_data_dir: "data/mysql/"
     mysql_database:
       -
-        dbname: gitea
-        dbuser: gitea
+        dbname: memo
+        dbuser: memo
         dbpwd: mZdKJzdsUt1Lcq0R
-      - 
-        dbname: wiki
-        dbuser: docusudrfwiki
-        dbpwd: qIc05St9cgGetaYp
-      - 
-        dbname: analytics_krd
-        dbuser: krdfsoiac
-        dbpwd: X3xJU5JvVVRQaoS1
-      - 
-        dbname: education
-        dbuser: education
-        dbpwd: ZxTycD0ruFM6Xjag
+      -
+        dbname: nano
+        dbuser: nano
+        dbpwd: mZdKJzdsUt1Lcq0R
     memory: 4096
   -
     #
@@ -175,7 +171,7 @@ nodes:
     port_ssh: 51105
     port_web_based_interface: 52105
     ip_private: 10.255.0.105
-    document_root: "data-www/upstream/"
+    document_root: "upstream/"
     apache_document_root: "/var/www"
     #   дополнительные переменные:
     memory: 6144
@@ -197,7 +193,7 @@ nodes:
     port_ssh: 51106
     port_web_based_interface: 52106
     ip_private: 10.255.0.106
-    document_root: "data-www/upstream/"
+    document_root: "upstream/"
     apache_document_root: "/var/www"
     #   дополнительные переменные:
     memory: 6144
@@ -219,7 +215,7 @@ nodes:
     port_ssh: 51107
     port_web_based_interface: 52107
     ip_private: 10.255.0.107
-    document_root: "data-www/upstream/"
+    document_root: "upstream/"
     apache_document_root: "/var/www"
     #   дополнительные переменные:
     memory: 6144
@@ -267,5 +263,24 @@ nodes:
     memory: 6144
     cpu: 2
     disksize: 100GB
-
+  -
+    #
+    description: "Экспериментальный сервер"
+    #   обязательные переменные:
+    name: "test"
+    setup: true
+    web_based_interface: fastpanel
+    domain_prefix: "test.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50110
+    port_ssh: 51110
+    port_web_based_interface: 52110
+    ip_private: 10.255.0.110
+    apache_document_root: "/var/www"
+    #   дополнительные переменные:
+    memory: 4096
+    disksize: 500GB
 ...
