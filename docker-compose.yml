@@ -3,9 +3,9 @@ version: '3'
 services:
   apache:
     image: httpd:2.4
-    container_name: otus-lesson-12-hw-apache
-    ports:
-      - 8080:8080
+    container_name: lesson-12-hw-apache
+    expose:
+      - 80
     volumes:
       - ./src:/usr/local/apache2/htdocs
       - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
@@ -14,9 +14,9 @@ services:
 
   nginx:
     image: nginx:latest	
-    container_name: otus-lesson-12-hw-nginx
+    container_name: lesson-12-hw-nginx
     ports:
-      - 8081:80
+      - 8080:80
     volumes:
       - ./src:/var/www/html
       - ./nginx/:/etc/nginx/conf.d/
@@ -24,9 +24,8 @@ services:
       - apache
 
   php:  
-    container_name: otus-lesson-12-hw-php
-    build:
-      ./php
+    container_name: lesson-12-hw-php
+    image: php:8.0-fpm
     volumes:
       - ./src:/usr/local/apache2/htdocs
       - ./php/php.ini:/usr/local/etc/php/php.ini
