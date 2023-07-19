@@ -23,10 +23,25 @@ services:
     depends_on:
       - apache
 
-  php:  
+  php:
+    image: php:8.0-fpm  
     container_name: lesson-12-hw-php
-    image: php:8.0-fpm
     volumes:
       - ./src:/usr/local/apache2/htdocs
-      - ./php/php.ini:/usr/local/etc/php/php.ini
+
+  mysql:
+    image: mysql:8.0.19
+    container_name: lesson-12-hw-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0.2  
+    container_name: lesson-12-hw-pma
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+    depends_on:
+      - mysql
    
