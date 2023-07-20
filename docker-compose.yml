@@ -7,8 +7,8 @@ services:
     expose:
       - 80
     volumes:
-      - ./src:/usr/local/apache2/htdocs
-      - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./data-www:/usr/local/apache2/htdocs
+      - ./nodes/config/apache/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php
 
@@ -18,8 +18,8 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./src:/var/www/html
-      - ./nginx/:/etc/nginx/conf.d/
+      - ./data-www:/var/www/html
+      - ./nodes/config/nginx/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - apache
 
@@ -27,21 +27,47 @@ services:
     image: php:8.0-fpm  
     container_name: lesson-12-hw-php
     volumes:
-      - ./src:/usr/local/apache2/htdocs
+      - ./data-www:/usr/local/apache2/htdocs
 
-  mysql:
+  mysql_master:
     image: mysql:8.0.19
-    container_name: lesson-12-hw-mysql
+    container_name: lesson-12-hw-mysql-master
     environment:
-      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_ROOT_PASSWORD: master-secret-pw
+    # административные права для root
+    privileged: true
+    volumes:
+      - ./data-backup/mysql-master/data:/var/lib/mysql
+      - ./nodes/config/mysql-master/mysql/:/etc/mysql/
 
-  phpmyadmin:
+  phpmyadmin_master:
     image: phpmyadmin/phpmyadmin:5.0.2  
-    container_name: lesson-12-hw-pma
+    container_name: lesson-12-hw-pma-master
     ports:
       - "8081:80"
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: mysql_master
     depends_on:
-      - mysql
+      - mysql_master
+
+  mysql_slave:
+    image: mysql:8.0.19
+    container_name: lesson-12-hw-mysql-slave
+    environment:
+      MYSQL_ROOT_PASSWORD: slave-secret-pw
+    # административные права для root
+    privileged: true
+    volumes:
+      - ./data-backup/mysql-slave/data:/var/lib/mysql
+      - ./nodes/config/mysql-slave/mysql/:/etc/mysql/
+
+  phpmyadmin_slave:
+    image: phpmyadmin/phpmyadmin:5.0.2  
+    container_name: lesson-12-hw-pma-slave
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: mysql_slave
+    depends_on:
+      - mysql_slave
    
