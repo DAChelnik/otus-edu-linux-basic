@@ -1,13 +1,6 @@
 version: '3'
 
 services:
-  nginx:
-    image: nginx:latest	
-    container_name: lesson-12-hw-nginx-balancer
-    ports:
-      - 8080:80
-    volumes:
-      - ./nodes/config/nginx/conf.d/:/etc/nginx/conf.d/
 
   nginx_primary:
     image: nginx:latest	
@@ -15,10 +8,11 @@ services:
     ports:
       - 8081:80
     volumes:
-      - ./data-www:/var/www/html
       - ./nodes/config/nginx-primary/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - apache_primary
+    networks:
+      meropa:
 
   apache_primary:
     image: httpd:2.4
@@ -26,10 +20,13 @@ services:
     expose:
       - 80
     volumes:
+      # - data-www:/usr/local/apache2/htdocs
       - ./data-www:/usr/local/apache2/htdocs
       - ./nodes/config/apache-primary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php
+    networks:
+      meropa:
 
   nginx_secondary:
     image: nginx:latest	
@@ -37,10 +34,11 @@ services:
     ports:
       - 8082:80
     volumes:
-      - ./data-www:/var/www/html
       - ./nodes/config/nginx-secondary/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - apache_secondary
+    networks:
+      meropa:
 
   apache_secondary:
     image: httpd:2.4
@@ -48,16 +46,48 @@ services:
     expose:
       - 80
     volumes:
+      # - data-www:/usr/local/apache2/htdocs
       - ./data-www:/usr/local/apache2/htdocs
       - ./nodes/config/apache-secondary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php
+    networks:
+      meropa:
+
+  nginx_backup:
+    image: nginx:latest	
+    container_name: lesson-12-hw-nginx-backup
+    ports:
+      - 8083:80
+    volumes:
+      - ./nodes/config/nginx-backup/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - apache_backup
+    networks:
+      meropa:
+
+  apache_backup:
+    image: httpd:2.4
+    container_name: lesson-12-hw-apache-backup
+    expose:
+      - 80
+    volumes:
+      # - data-www:/usr/local/apache2/htdocs
+      - ./data-www:/usr/local/apache2/htdocs
+      - ./nodes/config/apache-backup/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - php
+    networks:
+      meropa:
 
   php:
     image: php:8.0-fpm  
     container_name: lesson-12-hw-php
     volumes:
+      # - data-www:/usr/local/apache2/htdocs
       - ./data-www:/usr/local/apache2/htdocs
+    networks:
+      meropa:
 
   mysql_master:
     image: mysql:8.0.19
@@ -67,8 +97,10 @@ services:
     # административные права для root
     privileged: true
     volumes:
-      - ./data-backup/mysql-master/data:/var/lib/mysql
+      - mysql-master-data:/var/lib/mysql
       - ./nodes/config/mysql-master/mysql/:/etc/mysql/
+    networks:
+      meropa:
 
   phpmyadmin_master:
     image: phpmyadmin/phpmyadmin:5.0.2  
@@ -79,6 +111,8 @@ services:
       PMA_HOST: mysql_master
     depends_on:
       - mysql_master
+    networks:
+      meropa:
 
   mysql_slave:
     image: mysql:8.0.19
@@ -88,8 +122,10 @@ services:
     # административные права для root
     privileged: true
     volumes:
-      - ./data-backup/mysql-slave/data:/var/lib/mysql
+      - mysql-slave-data:/var/lib/mysql
       - ./nodes/config/mysql-slave/mysql/:/etc/mysql/
+    networks:
+      meropa:
 
   phpmyadmin_slave:
     image: phpmyadmin/phpmyadmin:5.0.2  
@@ -100,4 +136,14 @@ services:
       PMA_HOST: mysql_slave
     depends_on:
       - mysql_slave
+    networks:
+      meropa:
    
+volumes:
+  mysql-master-data:
+  mysql-slave-data:
+  # data-www:
+
+networks:
+  meropa:
+    

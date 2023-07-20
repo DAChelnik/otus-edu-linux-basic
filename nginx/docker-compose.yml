@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest	
+    container_name: lesson-12-hw-nginx-balancer
+    ports:
+      - 8080:80
+    volumes:
+      - ./nodes/config/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      meropa:
+
+networks:
+  meropa:
