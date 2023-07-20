@@ -13,3 +13,5 @@ services:
 
 networks:
   meropa:
+    external:
+      true

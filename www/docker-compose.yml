@@ -146,4 +146,6 @@ volumes:
 
 networks:
   meropa:
+    external:
+      true
     
