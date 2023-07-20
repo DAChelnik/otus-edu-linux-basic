@@ -1,27 +1,57 @@
 version: '3'
 
 services:
-  apache:
+  nginx:
+    image: nginx:latest	
+    container_name: lesson-12-hw-nginx-balancer
+    ports:
+      - 8080:80
+    volumes:
+      - ./nodes/config/nginx/conf.d/:/etc/nginx/conf.d/
+
+  nginx_primary:
+    image: nginx:latest	
+    container_name: lesson-12-hw-nginx-primary
+    ports:
+      - 8081:80
+    volumes:
+      - ./data-www:/var/www/html
+      - ./nodes/config/nginx-primary/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - apache_primary
+
+  apache_primary:
     image: httpd:2.4
-    container_name: lesson-12-hw-apache
+    container_name: lesson-12-hw-apache-primary
     expose:
       - 80
     volumes:
       - ./data-www:/usr/local/apache2/htdocs
-      - ./nodes/config/apache/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./nodes/config/apache-primary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php
 
-  nginx:
+  nginx_secondary:
     image: nginx:latest	
-    container_name: lesson-12-hw-nginx
+    container_name: lesson-12-hw-nginx-secondary
     ports:
-      - 8080:80
+      - 8082:80
     volumes:
       - ./data-www:/var/www/html
-      - ./nodes/config/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nodes/config/nginx-secondary/conf.d/:/etc/nginx/conf.d/
     depends_on:
-      - apache
+      - apache_secondary
+
+  apache_secondary:
+    image: httpd:2.4
+    container_name: lesson-12-hw-apache-secondary
+    expose:
+      - 80
+    volumes:
+      - ./data-www:/usr/local/apache2/htdocs
+      - ./nodes/config/apache-secondary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - php
 
   php:
     image: php:8.0-fpm  
@@ -44,7 +74,7 @@ services:
     image: phpmyadmin/phpmyadmin:5.0.2  
     container_name: lesson-12-hw-pma-master
     ports:
-      - "8081:80"
+      - 8091:80
     environment:
       PMA_HOST: mysql_master
     depends_on:
@@ -65,7 +95,7 @@ services:
     image: phpmyadmin/phpmyadmin:5.0.2  
     container_name: lesson-12-hw-pma-slave
     ports:
-      - "8082:80"
+      - 8092:80
     environment:
       PMA_HOST: mysql_slave
     depends_on:
