@@ -4,6 +4,8 @@ services:
   nginx:
     image: nginx:latest	
     container_name: lesson-12-hw-nginx-balancer
+    restart:
+      always
     ports:
       - 8080:80
     volumes:

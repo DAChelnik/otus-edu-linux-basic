@@ -88,6 +88,8 @@ services:
   mysql_master:
     image: mysql:8.0.19
     container_name: lesson-12-hw-mysql-master
+    restart:
+      always
     environment:
       MYSQL_ROOT_PASSWORD: master-secret-pw
     # административные права для root
@@ -95,6 +97,7 @@ services:
     volumes:
       - mysql-master-data:/var/lib/mysql
       - ./nodes/config/mysql-master/mysql/:/etc/mysql/
+      - ./nodes/config/mysql-master/mysql-files:/var/lib/mysql-files
     networks:
       meropa:
 
@@ -113,6 +116,8 @@ services:
   mysql_slave:
     image: mysql:8.0.19
     container_name: lesson-12-hw-mysql-slave
+    restart:
+      always
     environment:
       MYSQL_ROOT_PASSWORD: slave-secret-pw
     # административные права для root
@@ -120,6 +125,7 @@ services:
     volumes:
       - mysql-slave-data:/var/lib/mysql
       - ./nodes/config/mysql-slave/mysql/:/etc/mysql/
+      - ./nodes/config/mysql-slave/mysql-files:/var/lib/mysql-files
     networks:
       meropa:
 
