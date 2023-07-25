@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+
+  nginx_unicom_primary:
+    image: nginx:latest	
+    container_name: nginx-unicom-primary
+    expose:
+      - 80
+    volumes:
+      - ./nodes/config/nginx-unicom-primary/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - apache_unicom_primary
+    networks:
+      meropa:
+
+  apache_unicom_primary:
+    image: httpd:2.4
+    container_name: apache-unicom-primary
+    expose:
+      - 80
+    volumes:
+      - ./nodes/config/apache-unicom-primary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - php_unicom
+    networks:
+      meropa:
+
+  nginx_unicom_secondary:
+    image: nginx:latest	
+    container_name: nginx-unicom-secondary
+    expose:
+      - 80
+    volumes:
+      - ./nodes/config/nginx-unicom-secondary/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - apache_unicom_secondary
+    networks:
+      meropa:
+
+  apache_unicom_secondary:
+    image: httpd:2.4
+    container_name: apache-unicom-secondary
+    expose:
+      - 80
+    volumes:
+      - ./nodes/config/apache-unicom-secondary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - php_unicom
+    networks:
+      meropa:
+
+  nginx_unicom_backup:
+    image: nginx:latest	
+    container_name: nginx-unicom-backup
+    expose:
+      - 80
+    volumes:
+      - ./nodes/config/nginx-unicom-backup/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - apache_unicom_backup
+    networks:
+      meropa:
+
+  apache_unicom_backup:
+    image: httpd:2.4
+    container_name: apache-unicom-backup
+    expose:
+      - 80
+    volumes:
+      - ./nodes/config/apache-unicom-backup/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - php_unicom
+    networks:
+      meropa:
+
+  php_unicom:
+    image: php:8.0-fpm  
+    container_name: php-unicom
+    volumes:
+      - ./data-www:/usr/local/apache2/htdocs
+    networks:
+      meropa:
+
+networks:
+  meropa:
+    external:
+      true
+    

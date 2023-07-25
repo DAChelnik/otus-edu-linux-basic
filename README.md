@@ -8,7 +8,6 @@ I am currently studying a course "Administrator Linux.Basic" in OTUS online scho
 Изучаю курс [Administrator Linux.Basic](https://otus.ru/lessons/linux-basic/) в школе [OTUS](https://otus.ru/ "OTUS онлайн-образование").  
 Получаю навыки администрирования Linux, которые выделят меня среди начинающих администраторов ..
 
-
 В процессе обучения
 -------------------------------------------------------
 
