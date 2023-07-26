@@ -1,2 +1,2 @@
 <?php
-echo "Hello Unicom";
+echo "unicom";

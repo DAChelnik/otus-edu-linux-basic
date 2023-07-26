@@ -20,6 +20,7 @@ services:
     expose:
       - 80
     volumes:
+      - ./data-www:/usr/local/apache2/htdocs
       - ./nodes/config/apache-unicom-primary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php_unicom

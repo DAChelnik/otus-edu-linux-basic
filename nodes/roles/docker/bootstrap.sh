@@ -73,5 +73,8 @@ sudo docker compose up -d > /dev/null
 cd /var/compose-otus/otus-edu-linux-basic/docker/www
 sudo docker compose up -d > /dev/null
 
+cd /var/compose-otus/otus-edu-linux-basic/docker/www-chelnik-blog
+sudo docker compose up -d > /dev/null
+
 cd /var/compose-otus/otus-edu-linux-basic/docker/www-unicom
 sudo docker compose up -d > /dev/null
