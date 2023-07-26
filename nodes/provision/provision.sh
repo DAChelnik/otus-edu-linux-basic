@@ -33,18 +33,21 @@ echo -e "\n"
 echo -e "\e[33m Устанавливаем базовые пакеты и утилиты: \e[0m"
 echo -e "\e[33m - Midnight Commander (mc) \e[0m"
 apt-get -y install mc > /dev/null
+
 echo -e "\e[33m - утилиту для загрузки файлов по сети \e[0m"
 apt-get -y install wget > /dev/null
+
 echo -e "\e[33m - утилиту для выполнения системных задач по настройке \e[0m"
 apt-get -y install debconf-utils > /dev/null
+
 echo -e "\e[33m - утилиту, которая позволяет выполнять HTTP-запросы \e[0m"
 apt-get -y install curl > /dev/null
+
 #   echo -e "\e[33m - пакет build-essential, который содержит ссылки на многочисленные \e[0m"
 #   echo -e "\e[33m   пакеты, необходимые для создания программного обеспечения в целом \e[0m"
 #   apt-get -y install build-essential > /dev/null
-#   echo -e "\e[33m - доступ к APT-репозиториям по протоколу HTTPS \e[0m"
-#   apt-get -y install apt-transport-https > /dev/null
-#   echo -e "\n"
+
+
 
 # ВРЕМЯ:
 #   Для корректного отображения времени, необходимо синхронизировать его с внешним источником.

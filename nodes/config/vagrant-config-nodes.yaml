@@ -35,12 +35,12 @@
 nodes:
   -
     # 
-    description: "Nginx Load Balancer"
+    description: "Docker development"
     #   обязательные переменные:
-    name: "nlb"
+    name: "docker"
     setup: true
     web_based_interface: "cockpit"
-    domain_prefix: "nlb.meropa"
+    domain_prefix: "docker.meropa"
     box_check_update: false
     keys_only: false
     insert_key: false
@@ -78,7 +78,7 @@ nodes:
     description: "MySQL master-сервер баз данных"
     #   обязательные переменные:
     name: "mysql-master"
-    setup: true
+    setup: false
     web_based_interface: "cockpit"    
     domain_prefix: "mysql-master.meropa"
     box: "ubuntu/focal64"
@@ -115,13 +115,14 @@ nodes:
         dbname: chelnik
         dbuser: chelnik
         dbpwd: X3xJU5JvVVRQaoS1
-    memory: 4096
+    memory: 8192
+    cpu: 2
   -
     #
     description: "MySQL slave-сервер баз данных"
     #   обязательные переменные:
     name: "mysql-slave"
-    setup: true
+    setup: false
     web_based_interface: false    
     domain_prefix: "mysql-slave.meropa"
     box: "ubuntu/focal64"
@@ -154,133 +155,6 @@ nodes:
         dbname: nano
         dbuser: nano
         dbpwd: mZdKJzdsUt1Lcq0R
-    memory: 4096
-  -
-    #
-    description: "Production-окружение Веб сервер Nginx+Apache (primary)"
-    #   обязательные переменные:
-    name: "production-primary"
-    setup: true
-    web_based_interface: "cockpit"
-    domain_prefix: "production-primary.meropa"
-    box_check_update: false
-    keys_only: false
-    insert_key: false
-    port_guest: 80
-    port_host: 50105
-    port_ssh: 51105
-    port_web_based_interface: 52105
-    ip_private: 10.255.0.105
-    document_root: "upstream/"
-    apache_document_root: "/var/www"
-    #   дополнительные переменные:
-    memory: 6144
+    memory: 8192
     cpu: 2
-    disksize: 100GB
-  -
-    #
-    description: "Production-окружение Веб сервер Nginx+Apache (secondary)"
-    #   обязательные переменные:
-    name: "production-secondary"
-    setup: true
-    web_based_interface: "cockpit"
-    domain_prefix: "production-secondary.meropa"
-    box_check_update: false
-    keys_only: false
-    insert_key: false
-    port_guest: 80
-    port_host: 50106
-    port_ssh: 51106
-    port_web_based_interface: 52106
-    ip_private: 10.255.0.106
-    document_root: "upstream/"
-    apache_document_root: "/var/www"
-    #   дополнительные переменные:
-    memory: 6144
-    cpu: 2
-    disksize: 100GB
-  -
-    #
-    description: "Production-окружение Веб сервер Nginx+Apache (backup)"
-    #   обязательные переменные:
-    name: "production-backup"
-    setup: true
-    web_based_interface: "cockpit"
-    domain_prefix: "production-backup.meropa"
-    box_check_update: false
-    keys_only: false
-    insert_key: false
-    port_guest: 80
-    port_host: 50107
-    port_ssh: 51107
-    port_web_based_interface: 52107
-    ip_private: 10.255.0.107
-    document_root: "upstream/"
-    apache_document_root: "/var/www"
-    #   дополнительные переменные:
-    memory: 6144
-    cpu: 2
-    disksize: 100GB
-  -
-    #
-    description: "Сервер непрерывной интеграции (билд-сервер)"
-    #   обязательные переменные:
-    name: "build"
-    setup: true
-    web_based_interface: "cockpit"
-    domain_prefix: "build.meropa"
-    box_check_update: false
-    keys_only: false
-    insert_key: false
-    port_guest: 80
-    port_host: 50108
-    port_ssh: 51108
-    port_web_based_interface: 52108
-    ip_private: 10.255.0.108
-    apache_document_root: "/var/www"
-    #   дополнительные переменные:
-    memory: 6144
-    cpu: 2
-    disksize: 100GB
-  -
-    #
-    description: "Сервер разработки приложений"
-    #   обязательные переменные:
-    name: "dev"
-    setup: true
-    web_based_interface: "cockpit"
-    domain_prefix: "dev.meropa"
-    box_check_update: false
-    keys_only: false
-    insert_key: false
-    port_guest: 80
-    port_host: 50109
-    port_ssh: 51109
-    port_web_based_interface: 52109
-    ip_private: 10.255.0.109
-    apache_document_root: "/var/www"
-    #   дополнительные переменные:
-    memory: 6144
-    cpu: 2
-    disksize: 100GB
-  -
-    #
-    description: "Экспериментальный сервер"
-    #   обязательные переменные:
-    name: "test"
-    setup: true
-    web_based_interface: fastpanel
-    domain_prefix: "test.meropa"
-    box_check_update: false
-    keys_only: false
-    insert_key: false
-    port_guest: 80
-    port_host: 50110
-    port_ssh: 51110
-    port_web_based_interface: 52110
-    ip_private: 10.255.0.110
-    apache_document_root: "/var/www"
-    #   дополнительные переменные:
-    memory: 4096
-    disksize: 500GB
 ...
