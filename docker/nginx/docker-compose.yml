@@ -7,7 +7,7 @@ services:
     restart:
       always
     ports:
-      - 8080:80
+      - 80:80
     volumes:
       - ./nodes/config/nginx/conf.d/:/etc/nginx/conf.d/
     networks:

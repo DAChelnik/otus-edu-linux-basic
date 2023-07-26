@@ -61,17 +61,17 @@ cd /var/compose-otus
 sudo git clone https://github.com/DAChelnik/otus-edu-linux-basic
 
 cd /var/compose-otus/otus-edu-linux-basic
-sudo git checkout lesson-12-hw > /dev/null
+sudo git checkout project-work > /dev/null
 
 sudo docker network create meropa > /dev/null
 
 
 
-cd /var/compose-otus/otus-edu-linux-basic/nginx
+cd /var/compose-otus/otus-edu-linux-basic/docker/nginx
 sudo docker compose up -d > /dev/null
 
-cd /var/compose-otus/otus-edu-linux-basic/db
+cd /var/compose-otus/otus-edu-linux-basic/docker/www
 sudo docker compose up -d > /dev/null
 
-cd /var/compose-otus/otus-edu-linux-basic/www
+cd /var/compose-otus/otus-edu-linux-basic/docker/www-unicom
 sudo docker compose up -d > /dev/null
