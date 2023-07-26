@@ -49,7 +49,7 @@ nodes:
     port_ssh: 51101
     port_web_based_interface: 52101
     ip_private: 10.255.0.101
-    ip_pгидшс: 10.23.1.30
+    ip_public: 10.23.1.25
     apache_document_root: "/var/www/html"
     #   дополнительные переменные:
     memory: 8192
