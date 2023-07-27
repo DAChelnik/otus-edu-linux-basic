@@ -77,7 +77,7 @@ nodes:
     description: "MySQL master-сервер баз данных"
     #   обязательные переменные:
     name: "mysql-master"
-    setup: false
+    setup: true
     web_based_interface: "cockpit"    
     domain_prefix: "mysql-master.meropa"
     box: "ubuntu/focal64"
@@ -107,11 +107,11 @@ nodes:
         dbuser: gitea
         dbpwd: mZdKJzdsUt1Lcq0R
       -
-        dbname: blog
+        dbname: memo
         dbuser: blog
         dbpwd: mZdKJzdsUt1Lcq0R
       - 
-        dbname: wiki
+        dbname: nano
         dbuser: docusudrfwiki
         dbpwd: mZdKJzdsUt1Lcq0R
       - 
@@ -125,7 +125,7 @@ nodes:
     description: "MySQL slave-сервер баз данных"
     #   обязательные переменные:
     name: "mysql-slave"
-    setup: false
+    setup: true
     web_based_interface: false    
     domain_prefix: "mysql-slave.meropa"
     box: "ubuntu/focal64"
@@ -151,12 +151,8 @@ nodes:
     mysql_data_dir: "data/mysql/"
     mysql_database:
       -
-        dbname: memo
-        dbuser: memo
-        dbpwd: mZdKJzdsUt1Lcq0R
-      -
-        dbname: nano
-        dbuser: nano
+        dbname: test
+        dbuser: test
         dbpwd: mZdKJzdsUt1Lcq0R
     memory: 8192
     cpu: 2
@@ -167,7 +163,7 @@ nodes:
     name: "postgresql"
     setup: true
     web_based_interface: cockpit    
-    DACheF_domain_prefix: "postgresql.meropa"
+    domain_prefix: "postgresql.meropa"
     box_check_update: false
     keys_only: false
     insert_key: false
@@ -190,18 +186,18 @@ nodes:
     #   обязательные переменные:
     name: "git"
     setup: true
-    web_based_interface: cockpit
-    DACheF_domain_prefix: "git.meropa"
+    web_based_interface: "false"
+    domain_prefix: "git.meropa"
     box_check_update: false
     keys_only: false
     insert_key: false
     port_guest: 80
-    port_host: 5010
+    port_host: 80
     port_ssh: 51106
     port_web_based_interface: 52106
     ip_private: 10.255.0.106
     apache_document_root: "/var/www/html"
     #   дополнительные переменные:
-    memory: 6144
+    memory: 8192
     cpu: 2
 ...
