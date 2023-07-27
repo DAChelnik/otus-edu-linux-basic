@@ -30,16 +30,14 @@
 #     box                   - образ системы
 #     box_version           -
 
-
-
 nodes:
   -
     # 
-    description: "Docker development"
+    description: "Локальное окружение с помощью Docker Compose"
     #   обязательные переменные:
     name: "docker"
     setup: true
-    web_based_interface: "cockpit"
+    web_based_interface: "false"
     domain_prefix: "docker.meropa"
     box_check_update: false
     keys_only: false
@@ -105,17 +103,21 @@ nodes:
     mysql_data_dir: "data/mysql/"
     mysql_database:
       -
+        dbname: gitea
+        dbuser: gitea
+        dbpwd: mZdKJzdsUt1Lcq0R
+      -
         dbname: blog
         dbuser: blog
         dbpwd: mZdKJzdsUt1Lcq0R
       - 
         dbname: wiki
         dbuser: docusudrfwiki
-        dbpwd: qIc05St9cgGetaYp
+        dbpwd: mZdKJzdsUt1Lcq0R
       - 
         dbname: chelnik
         dbuser: chelnik
-        dbpwd: X3xJU5JvVVRQaoS1
+        dbpwd: mZdKJzdsUt1Lcq0R
     memory: 8192
     cpu: 2
   -
@@ -157,5 +159,49 @@ nodes:
         dbuser: nano
         dbpwd: mZdKJzdsUt1Lcq0R
     memory: 8192
+    cpu: 2
+  -
+    #
+    description: "PostgreSQL-кластер"
+    #   обязательные переменные:
+    name: "postgresql"
+    setup: true
+    web_based_interface: cockpit    
+    DACheF_domain_prefix: "postgresql.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50105
+    port_ssh: 51105
+    port_web_based_interface: 52105
+    ip_private: 10.255.0.105
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    pgsql_database:
+      -
+        dbname: gitea
+        dbuser: gitea
+        dbpwd: mZdKJzdsUt1Lcq0R
+    memory: 4096
+  -
+    #
+    description: "Система контроля версий Git"
+    #   обязательные переменные:
+    name: "git"
+    setup: true
+    web_based_interface: cockpit
+    DACheF_domain_prefix: "git.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 5010
+    port_ssh: 51106
+    port_web_based_interface: 52106
+    ip_private: 10.255.0.106
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    memory: 6144
     cpu: 2
 ...

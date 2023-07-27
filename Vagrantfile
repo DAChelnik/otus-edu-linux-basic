@@ -350,6 +350,10 @@ Vagrant.configure("#{configglobal["GLOBAL"]["api_version"]}") do |config|
               }
           end
           vm.vm.provision "shell", path: "#{current_dir}/nodes/provision/virtualhost-register.sh"
+        elsif confignodes["name"] == "git"
+          # ПРОБРОС ПОРТОВ:
+          vm.vm.network "forwarded_port", guest: 3000, host: 3000, auto_correct: true 
+          #
         elsif confignodes["name"] == "test"
           #   ДОПОЛНИТЕЛЬНАЯ КОНФИГУРАЦИЯ ВИРТУАЛЬНОЙ МАШИНЫ С ПОМОЩЬЮ SHELL
         end                     
