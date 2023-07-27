@@ -12,3 +12,19 @@ docker compose version
 
 echo -e ""
 sudo systemctl status docker
+
+echo -e ""
+cd /var/compose-otus/otus-edu-linux-basic/docker/nginx
+sudo docker compose ps --all
+
+echo -e ""
+cd /var/compose-otus/otus-edu-linux-basic/docker/www
+sudo docker compose ps --all
+
+echo -e ""
+cd /var/compose-otus/otus-edu-linux-basic/docker/www-chelnik-blog
+sudo docker compose ps --all
+
+echo -e ""
+cd /var/compose-otus/otus-edu-linux-basic/docker/www-unicom
+sudo docker compose ps --all
