@@ -32,47 +32,6 @@
 
 nodes:
   -
-    # 
-    description: "Локальное окружение с помощью Docker Compose"
-    #   обязательные переменные:
-    name: "docker"
-    setup: true
-    web_based_interface: "false"
-    domain_prefix: "docker.meropa"
-    box_check_update: false
-    keys_only: false
-    insert_key: false
-    port_guest: 80
-    port_host: 80
-    port_ssh: 51101
-    port_web_based_interface: 52101
-    ip_private: 10.255.0.101
-    ip_public: 10.23.1.25
-    apache_document_root: "/var/www/html"
-    #   дополнительные переменные:
-    memory: 8192
-    cpu: 2
-  -
-    # 
-    description: "Сервер мониторинга IT-инфраструктуры, аудита и авторизации"
-    #   обязательные переменные:
-    name: "ns"
-    setup: false
-    web_based_interface: "cockpit"
-    domain_prefix: "ns.meropa"
-    box_check_update: false
-    keys_only: false
-    insert_key: false
-    port_guest: 80
-    port_host: 50102
-    port_ssh: 51102
-    port_web_based_interface: 52102
-    ip_private: 10.255.0.102
-    apache_document_root: "/var/www/html"
-    #   дополнительные переменные:
-    memory: 8192
-    cpu: 2
-  -
     #
     description: "MySQL master-сервер баз данных"
     #   обязательные переменные:
@@ -200,4 +159,46 @@ nodes:
     #   дополнительные переменные:
     memory: 8192
     cpu: 2
+  -
+    # 
+    description: "Локальное окружение с помощью Docker Compose"
+    #   обязательные переменные:
+    name: "docker"
+    setup: true
+    web_based_interface: "false"
+    domain_prefix: "docker.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 80
+    port_ssh: 51101
+    port_web_based_interface: 52101
+    ip_private: 10.255.0.101
+    ip_public: 10.23.1.25
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    memory: 8192
+    cpu: 2
+  -
+    # 
+    description: "Сервер мониторинга IT-инфраструктуры, аудита и авторизации"
+    #   обязательные переменные:
+    name: "ns"
+    setup: false
+    web_based_interface: "cockpit"
+    domain_prefix: "ns.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50102
+    port_ssh: 51102
+    port_web_based_interface: 52102
+    ip_private: 10.255.0.102
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    memory: 8192
+    cpu: 2
+  
 ...
