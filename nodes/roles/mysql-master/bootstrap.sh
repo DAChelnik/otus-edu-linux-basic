@@ -91,7 +91,11 @@ sudo mkdir /backup/mysql-dump
 sudo chown -R root:root /backup/mysql-dump/
 sudo chmod -R 775 /backup/mysql-dump/
 sudo cp -Rf /backup/cron-jobs/mysql-backup-daily /etc/cron.daily
+sudo cp -Rf /backup/cron-jobs/mysql-backup-hourly /etc/cron.hourly
 
 echo -e "\e[33m Задаем права на выполнение скрипту создания резервной копии MySQL: \e[0m"
-chmod ugo+x /etc/cron.daily/mysql-backup-daily
-chmod ugo+x /backup/cron-jobs/mysql-backup-hourly
+sudo chown -R root:root /etc/cron.daily/mysql-backup-daily
+sudo chmod +x /etc/cron.daily/mysql-backup-daily
+
+sudo chown -R root:root /etc/cron.hourly/mysql-backup-hourly
+sudo chmod +x /etc/cron.hourly/mysql-backup-hourly
