@@ -8,7 +8,7 @@ services:
     expose:
       - 80
     volumes:
-      - ./nodes/config/nginx-unicom-primary/conf.d/:/etc/nginx/conf.d/
+      - ./containers/config/nginx-unicom-primary/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - apache_unicom_primary
     networks:
@@ -21,7 +21,7 @@ services:
       - 80
     volumes:
       - ./data-www:/usr/local/apache2/htdocs
-      - ./nodes/config/apache-unicom-primary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./containers/config/apache-unicom-primary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php_unicom
     networks:

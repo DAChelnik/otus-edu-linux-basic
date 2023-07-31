@@ -8,7 +8,7 @@ services:
     expose:
       - 80
     volumes:
-      - ./nodes/config/nginx-primary/conf.d/:/etc/nginx/conf.d/
+      - ./containers/config/nginx-primary/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - apache_primary
     networks:
@@ -21,7 +21,7 @@ services:
       - 80
     volumes:
       - ./data-www:/usr/local/apache2/htdocs
-      - ./nodes/config/apache-primary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./containers/config/apache-primary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php
     networks:
@@ -33,7 +33,7 @@ services:
     expose:
       - 80
     volumes:
-      - ./nodes/config/nginx-secondary/conf.d/:/etc/nginx/conf.d/
+      - ./containers/config/nginx-secondary/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - apache_secondary
     networks:
@@ -46,7 +46,7 @@ services:
       - 80
     volumes:
       - ./data-www:/usr/local/apache2/htdocs
-      - ./nodes/config/apache-secondary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./containers/config/apache-secondary/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php
     networks:
@@ -58,7 +58,7 @@ services:
     expose:
       - 80
     volumes:
-      - ./nodes/config/nginx-backup/conf.d/:/etc/nginx/conf.d/
+      - ./containers/config/nginx-backup/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - apache_backup
     networks:
@@ -71,7 +71,7 @@ services:
       - 80
     volumes:
       - ./data-www:/usr/local/apache2/htdocs
-      - ./nodes/config/apache-backup/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./containers/config/apache-backup/httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
       - php
     networks:
