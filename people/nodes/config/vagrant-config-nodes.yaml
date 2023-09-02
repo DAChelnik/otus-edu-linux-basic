@@ -44,10 +44,9 @@ nodes:
     insert_key: false
     port_guest: 80
     port_host: 80
-    port_ssh: 51101
-    port_web_based_interface: 52101
-    ip_private: 10.255.0.101
-    ip_public: 10.23.1.25
+    port_ssh: 51102
+    port_web_based_interface: 52102
+    ip_private: 10.255.0.102
     apache_document_root: "/var/www/html"
     #   дополнительные переменные:
     memory: 8192
@@ -57,17 +56,17 @@ nodes:
     description: "Сервер мониторинга IT-инфраструктуры, аудита и авторизации"
     #   обязательные переменные:
     name: "ns"
-    setup: false
+    setup: true
     web_based_interface: "cockpit"
     domain_prefix: "ns.meropa"
     box_check_update: false
     keys_only: false
     insert_key: false
     port_guest: 80
-    port_host: 50102
-    port_ssh: 51102
-    port_web_based_interface: 52102
-    ip_private: 10.255.0.102
+    port_host: 50103
+    port_ssh: 51103
+    port_web_based_interface: 52103
+    ip_private: 10.255.0.103
     apache_document_root: "/var/www/html"
     #   дополнительные переменные:
     memory: 8192
@@ -81,15 +80,15 @@ nodes:
     web_based_interface: "cockpit"    
     domain_prefix: "mysql-master.meropa"
     box: "ubuntu/focal64"
-    box_version: "20230506.0.0"
+    box_version: "20230809.0.0"
     box_check_update: false
     keys_only: false
     insert_key: false
     port_guest: 80
-    port_host: 50103
-    port_ssh: 51103
-    port_web_based_interface: 52103
-    ip_private: 10.255.0.103
+    port_host: 50104
+    port_ssh: 51104
+    port_web_based_interface: 52104
+    ip_private: 10.255.0.104
     apache_document_root: "/var/www/html"
     php_version: 7.4
     mysql_version: mysql8
@@ -129,21 +128,21 @@ nodes:
     web_based_interface: false    
     domain_prefix: "mysql-slave.meropa"
     box: "ubuntu/focal64"
-    box_version: "20230506.0.0"
+    box_version: "20230809.0.0"
     box_check_update: false
     keys_only: false
     insert_key: false
     port_guest: 80
-    port_host: 50104
-    port_ssh: 51104
-    port_web_based_interface: 52104
-    ip_private: 10.255.0.104
+    port_host: 50105
+    port_ssh: 51105
+    port_web_based_interface: 52105
+    ip_private: 10.255.0.105
     apache_document_root: "/var/www/html"
     php_version: 7.4
     mysql_version: mysql8
     #   дополнительные переменные:
     mysql_guest: 3306
-    mysql_host: 53104
+    mysql_host: 53105
     mysql_dbhost: localhost
     mysql_dbname: friends_iac 
     mysql_dbuser: root
@@ -168,10 +167,10 @@ nodes:
     keys_only: false
     insert_key: false
     port_guest: 80
-    port_host: 50105
-    port_ssh: 51105
-    port_web_based_interface: 52105
-    ip_private: 10.255.0.105
+    port_host: 50106
+    port_ssh: 51106
+    port_web_based_interface: 52106
+    ip_private: 10.255.0.106
     apache_document_root: "/var/www/html"
     #   дополнительные переменные:
     pgsql_database:
@@ -192,10 +191,10 @@ nodes:
     keys_only: false
     insert_key: false
     port_guest: 80
-    port_host: 80
-    port_ssh: 51106
-    port_web_based_interface: 52106
-    ip_private: 10.255.0.106
+    port_host: 50107
+    port_ssh: 51107
+    port_web_based_interface: 52107
+    ip_private: 10.255.0.107
     apache_document_root: "/var/www/html"
     #   дополнительные переменные:
     memory: 8192

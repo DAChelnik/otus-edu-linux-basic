@@ -1,0 +1,32 @@
+---
+
+# ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ:
+GLOBAL:
+  api_version: "2"
+  
+  # Сервер, на который будет осуществлена установка окружения
+  #   Доступные, протестированные переменные:
+  #     Meropa
+  #     Asterope
+  cloud_server: "Meropa"
+
+  # Домен который будем использовать для кластера
+  domain_suffix: ".chelnik.local"
+
+  
+  # VAGRANT PROVIDER:
+  #   Доступные переменные:
+  #     Docker              - docker
+  #     Hyper-V             - hyperv
+  #     VirtualBox          - virtualbox
+  #     VMWare Fusion       - vmware_fusion
+  #     VMWare Workstation  - vmware_workstation
+  #   Протестированные переменные:
+  #     VirtualBox          - virtualbox         
+  vagrant_provider: virtualbox
+  
+  # ЕДИНЫЙ ОБРАЗ СИСТЕМЫ ДЛЯ ВСЕХ ВИРТУАЛЬНЫХ МАШИН: 
+  box: "ubuntu/focal64"
+  box_version: "20230809.0.0"
+  
+...
