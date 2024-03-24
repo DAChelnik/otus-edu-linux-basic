@@ -1,0 +1,203 @@
+---
+
+# ОБЯЗАТЕЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ КАЖДОЙ ИЗ ВИРТУАЛЬНЫХ МАШИН:
+#   setup                 - доступные переменные: true, false
+#   name                  - name (имя виртуальной машины)
+#   box_check_update      - проверка репозитория на наличие обновлений
+#   keys_only: false      - можно подключаться по паролю
+#   insert_key: false     - отменить создание ssh-ключа
+#   ip_private            -
+#   ip_public             -
+#   ip_bridge             -
+#   apache_document_root  - 
+
+# ДИНАМИЧЕСКИЕ ПОРТЫ:
+#   Диапазон 49152—65535 содержит динамически выделяемые или частные порты, которые не регистрируются IANA.
+#   Эти порты используются временными (короткоживущими) соединениями «клиент — сервер» или в определенных частных случаях.
+#     port_guest                - 
+#     port_host                 - 50101 - 50999
+#     port_ssh                  - 51101 - 51999
+#     port_web_based_interface  - 52101 - 52999
+
+# ДОПОЛНИТЕЛЬНЫЕ ПЕРЕМЕННЫЕ:
+#   document_root         -
+#   memory                - объем оперативной памяти, по умолчанию, если не указано, выделяется 1024Mb
+#   cpu                   - количество ядер процессора, по умолчанию, если не указано, выделяется одно
+#   mysql_dbname          - основная база данных сервера разработки приложений
+#   
+#   по умолчанию устанавливается образ системы, определённый в глобальных переменных
+#   если необходима специфичность, определите для виртуальной машины следующие переменные:
+#     box                   - образ системы
+#     box_version           -
+
+nodes:
+  -
+    # 
+    description: "Локальное окружение с помощью Docker Compose"
+    #   обязательные переменные:
+    name: "docker"
+    setup: true
+    web_based_interface: "false"
+    domain_prefix: "docker.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 80
+    port_ssh: 51102
+    port_web_based_interface: 52102
+    ip_private: 10.255.0.102
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    memory: 8192
+    cpu: 2
+  -
+    # 
+    description: "Сервер мониторинга IT-инфраструктуры, аудита и авторизации"
+    #   обязательные переменные:
+    name: "ns"
+    setup: true
+    web_based_interface: "cockpit"
+    domain_prefix: "ns.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50103
+    port_ssh: 51103
+    port_web_based_interface: 52103
+    ip_private: 10.255.0.103
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    memory: 8192
+    cpu: 2
+  -
+    #
+    description: "MySQL master-сервер баз данных"
+    #   обязательные переменные:
+    name: "mysql-master"
+    setup: true
+    web_based_interface: "cockpit"    
+    domain_prefix: "mysql-master.meropa"
+    box: "ubuntu/focal64"
+    box_version: "20230809.0.0"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50104
+    port_ssh: 51104
+    port_web_based_interface: 52104
+    ip_private: 10.255.0.104
+    apache_document_root: "/var/www/html"
+    php_version: 7.4
+    mysql_version: mysql8
+    #   дополнительные переменные:
+    mysql_guest: 3306
+    mysql_host: 3306
+    mysql_dbhost: localhost
+    mysql_dbname: friends_iac 
+    mysql_dbuser: root
+    mysql_dbpasswd: FpTzLgIBC1Rtvi9f
+    mysql_data_dir: "data/mysql/"
+    mysql_database:
+      -
+        dbname: gitea
+        dbuser: gitea
+        dbpwd: mZdKJzdsUt1Lcq0R
+      -
+        dbname: memo
+        dbuser: blog
+        dbpwd: mZdKJzdsUt1Lcq0R
+      - 
+        dbname: nano
+        dbuser: docusudrfwiki
+        dbpwd: mZdKJzdsUt1Lcq0R
+      - 
+        dbname: chelnik
+        dbuser: chelnik
+        dbpwd: mZdKJzdsUt1Lcq0R
+    memory: 8192
+    cpu: 2
+  -
+    #
+    description: "MySQL slave-сервер баз данных"
+    #   обязательные переменные:
+    name: "mysql-slave"
+    setup: true
+    web_based_interface: false    
+    domain_prefix: "mysql-slave.meropa"
+    box: "ubuntu/focal64"
+    box_version: "20230809.0.0"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50105
+    port_ssh: 51105
+    port_web_based_interface: 52105
+    ip_private: 10.255.0.105
+    apache_document_root: "/var/www/html"
+    php_version: 7.4
+    mysql_version: mysql8
+    #   дополнительные переменные:
+    mysql_guest: 3306
+    mysql_host: 53105
+    mysql_dbhost: localhost
+    mysql_dbname: friends_iac 
+    mysql_dbuser: root
+    mysql_dbpasswd: FpTzLgIBC1Rtvi9f
+    mysql_data_dir: "data/mysql/"
+    mysql_database:
+      -
+        dbname: test
+        dbuser: test
+        dbpwd: mZdKJzdsUt1Lcq0R
+    memory: 8192
+    cpu: 2
+  -
+    #
+    description: "PostgreSQL-кластер"
+    #   обязательные переменные:
+    name: "postgresql"
+    setup: true
+    web_based_interface: cockpit    
+    domain_prefix: "postgresql.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50106
+    port_ssh: 51106
+    port_web_based_interface: 52106
+    ip_private: 10.255.0.106
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    pgsql_database:
+      -
+        dbname: gitea
+        dbuser: gitea
+        dbpwd: mZdKJzdsUt1Lcq0R
+    memory: 4096
+  -
+    #
+    description: "Система контроля версий Git"
+    #   обязательные переменные:
+    name: "git"
+    setup: true
+    web_based_interface: "false"
+    domain_prefix: "git.meropa"
+    box_check_update: false
+    keys_only: false
+    insert_key: false
+    port_guest: 80
+    port_host: 50107
+    port_ssh: 51107
+    port_web_based_interface: 52107
+    ip_private: 10.255.0.107
+    apache_document_root: "/var/www/html"
+    #   дополнительные переменные:
+    memory: 8192
+    cpu: 2
+  
+...

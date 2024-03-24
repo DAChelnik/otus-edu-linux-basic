@@ -1,11 +1,31 @@
+# файлы проекта
+people/nodes/config/vagrant-config-global.yaml
+people/nodes/config/vagrant-config-nodes.yaml
+process/nodes/config/vagrant-config-global.yaml
+process/nodes/config/vagrant-config-nodes.yaml
+technology/nodes/config/vagrant-config-global.yaml
+technology/nodes/config/vagrant-config-nodes.yaml
+
+
+
+
 # файлы, сгенерированные во время выполнения
 *.log
 *.lock
 *.tmp
 *.old
 
+# каталоги для выходных данных сборки
+bin/
+out/
+target/
+logs/
+project-temp/
+# C++
+build/
 
-# Windows system files
+
+# Windows system files ###
 Thumbs.db
 
 
@@ -13,11 +33,91 @@ Thumbs.db
 *.mwb
 
 
-# Vagrant
+# Diagram software
+*.drawio
+
+
+# PhpStorm
+.idea/
+
+
+## C++
+*.d
+# скомпилированные объектные файлы
+*.slo
+*.lo
+*.o
+*.obj
+# предварительно скомпилированные заголовки
+*.gch
+*.pch
+# скомпилированные динамические библиотеки
+*.so
+*.dylib
+*.dll
+# файлы модулей Fortran
+*.mod
+*.smod
+# скомпилированные статические библиотеки
+*.lai
+*.la
+*.a
+*.lib
+# исполняемые файлы
+*.exe
+*.out
+*.app
+
+
+## SublimeText
+*.sublime-project
+*.sublime-worspace
+
+
+## Vagrant
 *.box
 .vagrant/
+# Vagrant контейнеры
+VagrantBoxes/
 
 
-# Visual Studio Code
+## Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+
+## Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 *.code-workspace
-.vscode/
+# Local History for Visual Studio Code
+.history/
