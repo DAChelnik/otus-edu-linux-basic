@@ -1,3 +1,4 @@
+#!/bin/bash/
 
 cd docker/www
 docker-compose up -d
